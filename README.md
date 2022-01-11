@@ -1,0 +1,2 @@
+# Manager
+RN Expo application
