@@ -9,7 +9,9 @@
     "format": "prettier --check src/",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "prepare": "husky install",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "eslint-plugin-prettier": "^4.0.0",
@@ -30,7 +32,21 @@
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-react": "^7.28.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.7",
     "typescript": "~4.3.5"
+  },
+  "lint-staged": {
+    "*.tsx": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{tsx,ts}": "eslint --cache --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "private": true
 }

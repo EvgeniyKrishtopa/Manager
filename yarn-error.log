@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.22.17_2/libexec/bin/yarn.js add --dev babel-plugin-module-resolver
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.22.17_2/libexec/bin/yarn.js add -D husky lint-staged
 
 PATH: 
   /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/admin/Library/Android/sdk/emulator:/Users/admin/Library/Android/sdk/tools:/Users/admin/Library/Android/sdk/tools/bin:/Users/admin/Library/Android/sdk/platform-tools:/Users/admin/Library/Android/sdk/emulator:/Users/admin/Library/Android/sdk/tools:/Users/admin/Library/Android/sdk/tools/bin:/Users/admin/Library/Android/sdk/platform-tools
