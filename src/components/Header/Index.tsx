@@ -1,14 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import Auth from 'modules/Auth/Index';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function App() {
-  console.log(1234);
+export default function Header() {
   return (
     <View style={styles.container}>
-      <Auth />
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Text>Header123</Text>
     </View>
   );
 }
