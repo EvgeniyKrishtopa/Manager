@@ -10,17 +10,20 @@
       "modules/*": [
         "./src/modules/*"
       ],
-      "@store/*": [
-        "src/store/*"
+      "navigations/*": [
+        "./src/navigations/*"
       ],
-      "@localization/*": [
-        "src/localization/*"
+      "store/*": [
+        "./src/store/*"
       ],
-      "@typings/*": [
-        "src/typings/*"
+      "localization/*": [
+        "./src/localization/*"
       ],
-      "@utils/*": [
-        "src/utils/*"
+      "typings/*": [
+        "./src/typings/*"
+      ],
+      "utils/*": [
+        "./src/utils/*"
       ]
     }
   }

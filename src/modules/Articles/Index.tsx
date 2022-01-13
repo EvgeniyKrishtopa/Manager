@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Header() {
+export default function Articles() {
   return (
     <View style={styles.container}>
-      <Text> Header123</Text>
+      <Text>Articles</Text>
     </View>
   );
 }
@@ -12,7 +12,6 @@ export default function Header() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
     alignItems: 'center',
     justifyContent: 'center',
   },
