@@ -13,8 +13,8 @@
       "navigations/*": [
         "./src/navigations/*"
       ],
-      "store/*": [
-        "./src/store/*"
+      "redux/*": [
+        "./src/redux/*"
       ],
       "localization/*": [
         "./src/localization/*"

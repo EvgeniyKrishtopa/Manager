@@ -1,9 +1,10 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
+
 import styled from 'styled-components/native';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs/src/types';
-import { Screens } from 'navigations/Index';
+import { Screens } from 'typings/enums';
 
 const StyledView = styled.View`
   flex-direction: row;
