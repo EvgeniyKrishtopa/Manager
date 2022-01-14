@@ -1,22 +1,17 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import { persistor, store } from 'redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { MainStack } from 'navigations/Index';
-
-type RootStackParamList = {
-  App: { headerShown: boolean };
-};
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
-const options = { headerShown: false };
+import RootComponent from './src/Index';
+import Loader from 'components/Loader/Index';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="App" component={MainStack} options={options} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate loading={<Loader />} persistor={persistor}>
+        <RootComponent />
+      </PersistGate>
+    </Provider>
   );
 }

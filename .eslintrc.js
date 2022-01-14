@@ -14,7 +14,6 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
   ],
-  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -23,6 +22,7 @@ module.exports = {
     sourceType: 'module',
     project: ['./tsconfig.json'],
   },
+  parser: "@typescript-eslint/parser",
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
   rules: {
     indent: ['error', 2, { SwitchCase: 1 }],
@@ -34,6 +34,11 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'prettier/prettier': 'error',
+    "@typescript-eslint/no-unsafe-member-access": 'off',
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/unbound-method': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
   },
   settings: {
     react: {

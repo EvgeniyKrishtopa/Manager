@@ -9,20 +9,15 @@ import Articles from 'modules/Articles/Index';
 import Contacts from 'modules/Contacts/Index';
 import TabBar from 'components/TabBar/Index';
 
-export enum Screens {
-  Home = 'Home',
-  Contacts = 'Contacts',
-  About = 'About',
-  Articles = 'Articles',
-}
+import { Screens } from 'typings/enums';
 
 type StringOption = { title: string };
 
-export type BottomTabStackParamList = {
-  Home: StringOption;
-  Contacts: StringOption;
-  Articles: StringOption;
-  About: StringOption;
+type BottomTabStackParamList = {
+  [Screens.Home]: StringOption;
+  [Screens.Contacts]: StringOption;
+  [Screens.Articles]: StringOption;
+  [Screens.About]: StringOption;
 };
 
 const Tab = createBottomTabNavigator<BottomTabStackParamList>();
