@@ -13,6 +13,9 @@
       "navigations/*": [
         "./src/navigations/*"
       ],
+      "services/*": [
+        "./src/services/*"
+      ],
       "redux/*": [
         "./src/redux/*"
       ],
