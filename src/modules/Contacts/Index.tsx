@@ -1,13 +1,17 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Contacts() {
+import { WithBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+
+function Contacts() {
   return (
     <View style={styles.container}>
       <Text>Contacts</Text>
     </View>
   );
 }
+
+export default WithBackgroundImage(Contacts);
 
 const styles = StyleSheet.create({
   container: {

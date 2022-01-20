@@ -1,7 +1,10 @@
-export interface UserData {
-  id: number;
+export interface IUser {
+  loading: boolean;
+  userData: any | null;
+  error: string | undefined;
+  isLoginnedUser: boolean;
+}
+export interface IAuthData {
   email: string;
-  first_name: string;
-  last_name: string;
-  avatar: string;
+  password: string;
 }

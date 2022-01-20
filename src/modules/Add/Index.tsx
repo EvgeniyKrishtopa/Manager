@@ -1,13 +1,17 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Authentification() {
+import { WithBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+
+function Add() {
   return (
     <View style={styles.container}>
-      <Text>Auth</Text>
+      <Text>Add</Text>
     </View>
   );
 }
+
+export default WithBackgroundImage(Add);
 
 const styles = StyleSheet.create({
   container: {

@@ -1,44 +1,109 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice} from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { UserData } from 'typings/interfaces';
+import firebase from 'services/firebase';
 
-const initialState = {
-  users: [] as UserData[],
-  id: 1,
+import {IUser, IAuthData} from 'typings/interfaces';
+
+const auth = firebase.auth();
+
+const initialState: IUser = {
   loading: false,
+  userData: null,
+  error: '',
+  isLoginnedUser: false,
 };
 
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async (_, { rejectWithValue }) => {
-  try {
-    const response = await fetch('https://reqres.in/api/users?delay=1');
-    return (await response.json()).data as UserData[];
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
-});
+export const SignInAction = createAsyncThunk(
+  'users/signInAction',
+  async (payload: IAuthData, { rejectWithValue }) => {
+    try {
+      const response = auth.signInWithEmailAndPassword(payload.email, payload.password);
+      return (await response).user;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
+export const SignUpAction = createAsyncThunk(
+  'users/signUpAction',
+  async (payload: IAuthData, { rejectWithValue }) => {
+    try {
+      const response = auth.createUserWithEmailAndPassword(payload.email, payload.password);
+      return (await response).user;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const LogOutAction = createAsyncThunk(
+  'users/LogOutAction',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = auth.signOut();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 export const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
-    incrementByAmount(state, action: PayloadAction<number>) {
-      state.id = action.payload;
+    checkError: state => {
+      state.error = ''
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchUsers.pending, (state) => {
+    builder.addCase(SignInAction.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(fetchUsers.fulfilled, (state, action) => {
-      state.users = action.payload;
+    builder.addCase(SignInAction.fulfilled, (state, action) => {
+      state.userData = action.payload;
+      state.isLoginnedUser = true;
       state.loading = false;
+      state.error = '';
     });
-    builder.addCase(fetchUsers.rejected, (state) => {
+    builder.addCase(SignInAction.rejected, (state, action) => {
       state.loading = false;
+      state.isLoginnedUser = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(SignUpAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(SignUpAction.fulfilled, (state, action) => {
+      state.userData = action.payload;
+      state.isLoginnedUser = true;
+      state.loading = false;
+      state.error = '';
+    });
+    builder.addCase(SignUpAction.rejected, (state, action) => {
+      state.loading = false;
+      state.isLoginnedUser = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(LogOutAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(LogOutAction.fulfilled, (state) => {
+      state.userData = null;
+      state.isLoginnedUser = false;
+      state.loading = false;
+      state.error = '';
+    });
+    builder.addCase(LogOutAction.rejected, (state, action) => {
+      state.loading = false;
+      state.isLoginnedUser = true;
+      state.error = action.error.message;
     });
   },
 });
 
-export const { incrementByAmount } = usersSlice.actions;
+export const { checkError } = usersSlice.actions
 
 export default usersSlice.reducer;

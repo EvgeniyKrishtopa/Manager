@@ -8,25 +8,28 @@ import { Screens } from 'typings/enums';
 
 const StyledView = styled.View`
   flex-direction: row;
-  background-color: #dfd8ca;
+  background-color: #b1d0e0;
   align-items: center;
   justify-content: space-between;
   padding: 10px 40px 15px;
+  border-top-width: 0.5px;
+  border-style: solid;
+  border-color: #519259;
 `;
 
 export default function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const renderIcon = (screen: string, focused: boolean) => {
-    const iconColor = focused ? '#4FBDBA' : '#716F81';
+    const iconColor = focused ? '#4FBDBA' : '#B762C1';
 
     switch (screen) {
-      case Screens.Home:
+      case Screens.Main:
         return <Ionicons name="md-home" size={32} color={iconColor} />;
       case Screens.Contacts:
         return <Ionicons name="list" size={35} color={iconColor} />;
       case Screens.Articles:
         return <Ionicons name="md-newspaper" size={32} color={iconColor} />;
-      case Screens.About:
-        return <Ionicons name="information-circle-sharp" size={35} color={iconColor} />;
+      case Screens.Add:
+        return <Ionicons name="add-circle-outline" size={32} color={iconColor} />;
     }
   };
 
