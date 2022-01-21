@@ -1,43 +1,18 @@
 import React from 'react';
 
-import styled from 'styled-components/native';
+import { useTheme } from 'styled-components';
 import { SignInAction, SignUpAction } from 'redux/reducers/usersReducer';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
 import { IAuthData } from 'typings/interfaces';
-import { useDispatchHook } from 'utils/hooks/useDispatchHook';
-
-const StyledInput = styled.TextInput`
-  border-bottom-width: 2px;
-  border-style: solid;
-  border-color: #fff;
-  padding: 10px 0;
-  color: #fff;
-  font-size: 16px;
-  margin-bottom: 15px;
-  width: 300px;
-`;
-
-const TextError = styled.Text`
-  font-size: 16px;
-  color: #ef2f88;
-  padding: 5px 0 20px;
-  margin-top: -15px;
-`;
-
-const StyledButtonSubmit = styled.TouchableOpacity`
-  background-color: #519259;
-  border-radius: 20px;
-  padding: 12px 45px;
-`;
-
-const StyledButtonText = styled.Text`
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
-  text-transform: uppercase;
-`;
+import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
+import {
+  StyledInput,
+  TextError,
+  StyledButtonPrimary,
+  StyledButtonTextPrimary,
+} from 'components/Styled/Index';
 
 type LoginForm = {
   SignIn?: boolean;
@@ -55,7 +30,7 @@ enum Fields {
 
 export default function LoginForm(props: LoginForm) {
   const [dispatch] = useDispatchHook();
-
+  const theme = useTheme();
   const formSubmit = (values: IAuthData) => {
     const data = props.SignIn ? SignInAction(values) : SignUpAction(values);
     dispatch(data);
@@ -96,22 +71,22 @@ export default function LoginForm(props: LoginForm) {
               onChangeText={handleChange(Fields.email)}
               onBlur={handleBlur(Fields.email)}
               value={values.email}
-              placeholder="Email"
-              placeholderTextColor="#fff"
+              placeholder={Fields.email}
+              placeholderTextColor={theme.colors.secondaryTextColor}
             />
             {errors.email && touched.email ? <TextError>{errors.email}</TextError> : null}
             <StyledInput
               onChangeText={handleChange(Fields.password)}
               onBlur={handleBlur(Fields.password)}
               value={values.password}
-              placeholder="Password"
+              placeholder={Fields.password}
               secureTextEntry
-              placeholderTextColor="#fff"
+              placeholderTextColor={theme.colors.secondaryTextColor}
             />
             {errors.password && touched.password ? <TextError>{errors.password}</TextError> : null}
-            <StyledButtonSubmit onPress={() => handleSubmit()} disabled={isSubmitting}>
-              <StyledButtonText>Submit</StyledButtonText>
-            </StyledButtonSubmit>
+            <StyledButtonPrimary onPress={() => handleSubmit()} disabled={isSubmitting}>
+              <StyledButtonTextPrimary>Submit</StyledButtonTextPrimary>
+            </StyledButtonPrimary>
           </>
         )}
       </Formik>

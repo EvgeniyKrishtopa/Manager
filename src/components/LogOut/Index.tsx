@@ -1,8 +1,9 @@
 import React from 'react';
 
 import styled from 'styled-components/native';
+import { useTheme } from 'styled-components';
 import { LogOutAction } from 'redux/reducers/usersReducer';
-import { useDispatchHook } from 'utils/hooks/useDispatchHook';
+import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
 
 import { Entypo } from '@expo/vector-icons';
 
@@ -12,6 +13,7 @@ const StyledLogOutButton = styled.TouchableOpacity`
 
 export default function LogOutButton() {
   const [dispatch] = useDispatchHook();
+  const theme = useTheme();
 
   const onPressHandler = () => {
     dispatch(LogOutAction());
@@ -19,7 +21,7 @@ export default function LogOutButton() {
 
   return (
     <StyledLogOutButton onPress={onPressHandler}>
-      <Entypo name="log-out" size={28} color="#B762C1" />
+      <Entypo name="log-out" size={28} color={theme.colors.secondary} />
     </StyledLogOutButton>
   );
 }
