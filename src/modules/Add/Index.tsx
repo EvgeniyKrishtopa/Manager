@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { WithBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 
 function Add() {
   return (
@@ -11,7 +11,7 @@ function Add() {
   );
 }
 
-export default WithBackgroundImage(Add);
+export default withBackgroundImage(Add);
 
 const styles = StyleSheet.create({
   container: {

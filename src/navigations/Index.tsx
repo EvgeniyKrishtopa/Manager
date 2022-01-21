@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs/src/types';
 import { Fontisto } from '@expo/vector-icons';
 import { useTheme } from 'styled-components';
+import styled from 'styled-components/native';
 import Home from 'modules/Home/Index';
 import Articles from 'modules/Articles/Index';
 import Contacts from 'modules/Contacts/Index';
@@ -30,6 +31,12 @@ export type AuthStackParamsList = {
   SignIn: undefined;
   SignUp: undefined;
 };
+
+const StyledLogo = styled.Image`
+  width: 75px;
+  height: 75px;
+  margin-top: -10px;
+`;
 
 const Tab = createBottomTabNavigator<BottomTabStackParamList>();
 const Stack = createNativeStackNavigator<AuthStackParamsList>();
@@ -63,7 +70,7 @@ export default function RootStack() {
       backgroundColor: theme.colors.mainBackgroundColor,
     },
     headerTintColor: theme.colors.primary,
-    headerTitle: () => <Fontisto name="onenote" size={40} color={theme.colors.primary} />,
+    headerTitle: () => <StyledLogo source={require('../../assets/logo.png')} />,
     headerLeft: () => <LogOutButton />,
     headerRight: () => <SettingsButton />,
   };

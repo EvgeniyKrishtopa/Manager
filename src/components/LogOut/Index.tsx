@@ -21,7 +21,7 @@ export default function LogOutButton() {
 
   return (
     <StyledLogOutButton onPress={onPressHandler}>
-      <Entypo name="log-out" size={28} color={theme.colors.secondary} />
+      <Entypo name="log-out" size={28} color={theme.colors.primary} />
     </StyledLogOutButton>
   );
 }

@@ -13,7 +13,7 @@ export default function SettingsButton() {
 
   return (
     <StyledSettingsButton onPress={() => console.log('settings')}>
-      <AntDesign name="setting" size={28} color={theme.colors.secondary} />
+      <AntDesign name="setting" size={28} color={theme.colors.primary} />
     </StyledSettingsButton>
   );
 }

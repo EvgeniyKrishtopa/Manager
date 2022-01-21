@@ -1,5 +1,5 @@
 import React, { ComponentType } from 'react';
-
+import { useTheme } from 'styled-components';
 import styled from 'styled-components/native';
 
 const StyledImageBackground = styled.ImageBackground`
@@ -10,14 +10,18 @@ const StyledImageBackground = styled.ImageBackground`
   justify-content: center;
 `;
 
-const image = {
-  uri: 'https://cdn.pixabay.com/photo/2020/01/02/10/15/background-image-4735444_960_720.png',
-};
+export function withBackgroundImage<T>(WrappedComponent: ComponentType<T>) {
+  return (props: T) => {
+    const theme = useTheme();
 
-export function WithBackgroundImage<T>(WrappedComponent: ComponentType<T>) {
-  return (props: T) => (
-    <StyledImageBackground source={image} resizeMode="cover">
-      <WrappedComponent {...props} />
-    </StyledImageBackground>
-  );
+    const image = {
+      uri: theme.backgroundUrl,
+    };
+
+    return (
+      <StyledImageBackground source={image} resizeMode="cover">
+        <WrappedComponent {...props} />
+      </StyledImageBackground>
+    );
+  };
 }

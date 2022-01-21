@@ -10,7 +10,14 @@ declare module 'styled-components' {
       secondaryTextColor: string;
       error: string;
     };
-    fonts: array<string>;
+    fonts: {
+      primaryThin: string;
+      primaryMedium: string;
+      primaryBold: string;
+      secondaryThin: string;
+      secondaryMedium: string;
+      secondaryBold: string;
+    };
     fontSizes: {
       small: string;
       medium: string;

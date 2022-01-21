@@ -22,7 +22,7 @@ export default function TabBar({ state, descriptors, navigation }: BottomTabBarP
   const theme = useTheme();
 
   const renderIcon = (screen: string, focused: boolean) => {
-    const iconColor = focused ? theme.colors.primary : theme.colors.secondary;
+    const iconColor = focused ? theme.colors.primary : theme.colors.mainTextColor;
 
     switch (screen) {
       case Screens.Main:
