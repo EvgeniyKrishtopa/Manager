@@ -2,17 +2,18 @@ import React from 'react';
 
 import { FontAwesome } from '@expo/vector-icons';
 import styled from 'styled-components/native';
+import { useTheme } from 'styled-components';
 import LoginForm from 'components/Forms/LoginForm';
 import ErrorAlert from 'components/ErrorAlert/Index';
 
 import { Screens } from 'typings/enums';
-import { useNavigationHook } from 'utils/hooks/useNavigationHook';
+import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import { WithBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 
 export const StyledTextInfo = styled.Text`
   font-size: 20px;
   text-align: center;
-  color: #fff;
+  color: ${(props) => props.theme.colors.secondaryTextColor};
 `;
 
 export const StyledInfoWrapper = styled.View`
@@ -32,7 +33,7 @@ export const StyledSignUpIconHolder = styled.TouchableOpacity`
 `;
 
 export const StyledTitle = styled.Text`
-  color: #fff;
+  color: ${(props) => props.theme.colors.secondaryTextColor};
   font-weight: bold;
   font-size: 22px;
   text-transform: uppercase;
@@ -41,6 +42,7 @@ export const StyledTitle = styled.Text`
 
 function SignIn() {
   const [navigation] = useNavigationHook(Screens.SignIn);
+  const theme = useTheme();
 
   const onPressHandler = () => {
     navigation.navigate(Screens.SignUp);
@@ -51,7 +53,7 @@ function SignIn() {
       <StyledInfoWrapper>
         <StyledTextInfo>Visit first? You need Sign Up! </StyledTextInfo>
         <StyledSignUpIconHolder onPress={onPressHandler}>
-          <FontAwesome name="sign-in" size={40} color="#519259" />
+          <FontAwesome name="sign-in" size={40} color={theme.colors.primary} />
         </StyledSignUpIconHolder>
       </StyledInfoWrapper>
       <StyledTitle>Sign In</StyledTitle>

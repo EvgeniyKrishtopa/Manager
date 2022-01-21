@@ -5,21 +5,24 @@ import styled from 'styled-components/native';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs/src/types';
 import { Screens } from 'typings/enums';
+import { useTheme } from 'styled-components';
 
 const StyledView = styled.View`
   flex-direction: row;
-  background-color: #b1d0e0;
+  background-color: ${(props) => props.theme.colors.mainBackgroundColor};
   align-items: center;
   justify-content: space-between;
   padding: 10px 40px 15px;
   border-top-width: 0.5px;
   border-style: solid;
-  border-color: #519259;
+  border-color: ${(props) => props.theme.colors.primary};
 `;
 
 export default function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  const theme = useTheme();
+
   const renderIcon = (screen: string, focused: boolean) => {
-    const iconColor = focused ? '#4FBDBA' : '#B762C1';
+    const iconColor = focused ? theme.colors.primary : theme.colors.secondary;
 
     switch (screen) {
       case Screens.Main:
