@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { WithBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 
 function Articles() {
   return (
@@ -11,7 +11,7 @@ function Articles() {
   );
 }
 
-export default WithBackgroundImage(Articles);
+export default withBackgroundImage(Articles);
 
 const styles = StyleSheet.create({
   container: {

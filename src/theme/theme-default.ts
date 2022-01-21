@@ -1,6 +1,6 @@
-import {DefaultTheme} from 'styled-components';
+import { DefaultTheme } from 'styled-components';
 
-export const theme1: DefaultTheme = {
+export const themeDefault: DefaultTheme = {
   colors: {
     primary: '#519259',
     secondary: '#B762C1',
@@ -9,7 +9,14 @@ export const theme1: DefaultTheme = {
     secondaryTextColor: '#fff',
     error: '#F05454',
   },
-  fonts: ['sans-serif', 'Roboto'],
+  fonts: {
+    primaryThin: 'Montserrat-Thin',
+    primaryMedium: 'Montserrat-Regular',
+    primaryBold: 'Montserrat-SemiBold',
+    secondaryThin: 'WorkSans-Light',
+    secondaryMedium: 'WorkSans-Medium',
+    secondaryBold: 'WorkSans-SemiBold',
+  },
   fontSizes: {
     small: '12px',
     medium: '16px',

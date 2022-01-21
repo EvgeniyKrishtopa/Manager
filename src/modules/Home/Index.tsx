@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import { WithBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 
 function Home() {
   return (
@@ -11,4 +11,4 @@ function Home() {
   );
 }
 
-export default WithBackgroundImage(Home);
+export default withBackgroundImage(Home);

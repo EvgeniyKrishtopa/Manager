@@ -6,7 +6,7 @@ import ErrorAlert from 'components/ErrorAlert/Index';
 import { StyledTextInfo, StyledInfoWrapper, StyledSignUpIconHolder, StyledTitle } from './SignIn';
 import { Screens } from 'typings/enums';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
-import { WithBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 
 function SignUp() {
   const [navigation] = useNavigationHook(Screens.SignUp);
@@ -31,4 +31,4 @@ function SignUp() {
   );
 }
 
-export default WithBackgroundImage(SignUp);
+export default withBackgroundImage(SignUp);

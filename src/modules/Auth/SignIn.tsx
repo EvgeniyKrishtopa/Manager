@@ -8,11 +8,12 @@ import ErrorAlert from 'components/ErrorAlert/Index';
 
 import { Screens } from 'typings/enums';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
-import { WithBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 
 export const StyledTextInfo = styled.Text`
   font-size: 20px;
   text-align: center;
+  font-family: ${(props) => props.theme.fonts.primaryMedium};
   color: ${(props) => props.theme.colors.secondaryTextColor};
 `;
 
@@ -34,6 +35,7 @@ export const StyledSignUpIconHolder = styled.TouchableOpacity`
 
 export const StyledTitle = styled.Text`
   color: ${(props) => props.theme.colors.secondaryTextColor};
+  font-family: ${(props) => props.theme.fonts.primaryBold};
   font-weight: bold;
   font-size: 22px;
   text-transform: uppercase;
@@ -63,4 +65,4 @@ function SignIn() {
   );
 }
 
-export default WithBackgroundImage(SignIn);
+export default withBackgroundImage(SignIn);
