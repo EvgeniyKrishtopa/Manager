@@ -28,7 +28,7 @@ enum Fields {
   longPassword = 'Too long password!',
 }
 
-export default function LoginForm(props: LoginForm) {
+export default function SettingsForm(props: LoginForm) {
   const [dispatch] = useDispatchHook();
   const theme = useTheme();
   const formSubmit = (values: IAuthData) => {

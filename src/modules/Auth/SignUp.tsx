@@ -1,12 +1,19 @@
 import React from 'react';
+
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components';
 import LoginForm from 'components/Forms/LoginForm';
-import ErrorAlert from 'components/ErrorAlert/Index';
-import { StyledTextInfo, StyledInfoWrapper, StyledSignUpIconHolder, StyledTitle } from './SignIn';
-import { Screens } from 'typings/enums';
+import {
+  StyledWrapper,
+  StyledTextInfo,
+  StyledInfoWrapper,
+  StyledSignUpIconHolder,
+  StyledTitle,
+} from './SignIn';
+import { Screens, AuthInfo } from 'typings/enums';
+import { withNotification } from 'utils/Hocs/withNotification';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
-import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 
 function SignUp() {
   const [navigation] = useNavigationHook(Screens.SignUp);
@@ -17,18 +24,22 @@ function SignUp() {
   };
 
   return (
-    <>
-      <StyledInfoWrapper>
-        <StyledSignUpIconHolder onPress={goBack}>
-          <Ionicons name="arrow-back" size={40} color={theme.colors.primary} />
-        </StyledSignUpIconHolder>
-        <StyledTextInfo>Go Back</StyledTextInfo>
-      </StyledInfoWrapper>
-      <StyledTitle>Sign Up</StyledTitle>
-      <LoginForm SignUp />
-      <ErrorAlert />
-    </>
+    <TouchableDismissWrappper>
+      <StyledWrapper>
+        <StyledInfoWrapper>
+          <StyledSignUpIconHolder onPress={goBack}>
+            <Ionicons name="arrow-back" size={40} color={theme.colors.primary} />
+          </StyledSignUpIconHolder>
+          <StyledTextInfo>{AuthInfo.GoBack}</StyledTextInfo>
+        </StyledInfoWrapper>
+        <StyledTitle>{AuthInfo.SignUp}</StyledTitle>
+        <LoginForm SignUp />
+      </StyledWrapper>
+    </TouchableDismissWrappper>
   );
 }
 
-export default withBackgroundImage(SignUp);
+export default withNotification({
+  isNotificationSuccessVisible: false,
+  isNotificationErrorVisible: true,
+})(SignUp);

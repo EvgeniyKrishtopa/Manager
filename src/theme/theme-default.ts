@@ -5,9 +5,11 @@ export const themeDefault: DefaultTheme = {
     primary: '#519259',
     secondary: '#B762C1',
     mainBackgroundColor: '#b1d0e0',
+    secondaryBackgroundColor: '#8DB8D8',
     mainTextColor: '#04293A',
     secondaryTextColor: '#fff',
     error: '#F05454',
+    disabled: '#93B5C6',
   },
   fonts: {
     primaryThin: 'Montserrat-Thin',
