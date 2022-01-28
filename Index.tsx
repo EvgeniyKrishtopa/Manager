@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/store';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
-
+import { checkError } from 'redux/reducers/usersReducer';
 import RootStack from 'navigations/Index';
+import Notification from 'components/Notifications/Index';
+import { ToastProvider } from 'react-native-toast-notifications';
+import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
 
 export default function RootComponent() {
   const [fontLoaded, setFontLoaded] = useState<boolean>(false);
+  const { error } = useSelector((state: RootState) => state.users);
+  const [dispatch] = useDispatchHook();
+
+  useEffect(() => {
+    setTimeout(() => {
+      error.length && dispatch(checkError());
+    }, 2000);
+  }, [error, dispatch]);
 
   const loadFonts = () => {
     return Font.loadAsync({
@@ -30,8 +42,12 @@ export default function RootComponent() {
   }
 
   return (
-    <NavigationContainer>
+    <ToastProvider
+      offsetBottom={40}
+      swipeEnabled={true}
+      renderToast={(toast) => <Notification error={error} toast={toast} />}
+    >
       <RootStack />
-    </NavigationContainer>
+    </ToastProvider>
   );
 }

@@ -4,14 +4,13 @@ import { FontAwesome } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { useTheme } from 'styled-components';
 import LoginForm from 'components/Forms/LoginForm';
-import ErrorAlert from 'components/ErrorAlert/Index';
-
-import { Screens } from 'typings/enums';
+import { Screens, AuthInfo } from 'typings/enums';
+import { withNotification } from 'utils/Hocs/withNotification';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
-import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 
 export const StyledTextInfo = styled.Text`
-  font-size: 20px;
+  font-size: 18px;
   text-align: center;
   font-family: ${(props) => props.theme.fonts.primaryMedium};
   color: ${(props) => props.theme.colors.secondaryTextColor};
@@ -33,6 +32,16 @@ export const StyledSignUpIconHolder = styled.TouchableOpacity`
   left: 50%;
 `;
 
+export const StyledWrapper = styled.View`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(props) => props.theme.colors.secondaryBackgroundColor};
+`;
+
 export const StyledTitle = styled.Text`
   color: ${(props) => props.theme.colors.secondaryTextColor};
   font-family: ${(props) => props.theme.fonts.primaryBold};
@@ -46,23 +55,27 @@ function SignIn() {
   const [navigation] = useNavigationHook(Screens.SignIn);
   const theme = useTheme();
 
-  const onPressHandler = () => {
+  const onPressNavigationHandler = () => {
     navigation.navigate(Screens.SignUp);
   };
 
   return (
-    <>
-      <StyledInfoWrapper>
-        <StyledTextInfo>Visit first? You need Sign Up! </StyledTextInfo>
-        <StyledSignUpIconHolder onPress={onPressHandler}>
-          <FontAwesome name="sign-in" size={40} color={theme.colors.primary} />
-        </StyledSignUpIconHolder>
-      </StyledInfoWrapper>
-      <StyledTitle>Sign In</StyledTitle>
-      <LoginForm SignIn />
-      <ErrorAlert />
-    </>
+    <TouchableDismissWrappper>
+      <StyledWrapper>
+        <StyledInfoWrapper>
+          <StyledTextInfo>{AuthInfo.VisitFirst}</StyledTextInfo>
+          <StyledSignUpIconHolder onPress={onPressNavigationHandler}>
+            <FontAwesome name="sign-in" size={40} color={theme.colors.primary} />
+          </StyledSignUpIconHolder>
+        </StyledInfoWrapper>
+        <StyledTitle>{AuthInfo.SignIn}</StyledTitle>
+        <LoginForm SignIn />
+      </StyledWrapper>
+    </TouchableDismissWrappper>
   );
 }
 
-export default withBackgroundImage(SignIn);
+export default withNotification({
+  isNotificationSuccessVisible: false,
+  isNotificationErrorVisible: true,
+})(SignIn);

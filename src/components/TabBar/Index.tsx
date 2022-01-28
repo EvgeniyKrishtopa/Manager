@@ -18,21 +18,54 @@ const StyledView = styled.View`
   border-color: ${(props) => props.theme.colors.primary};
 `;
 
+const StyledTabHolder = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const StyledText = styled.Text<{ focused: boolean }>`
+  font-size: 14px;
+  font-family: ${(props) => props.theme.fonts.primaryMedium}
+  color: ${(props) =>
+    props.focused ? props.theme.colors.primary : props.theme.colors.mainTextColor};
+`;
+
 export default function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const theme = useTheme();
 
-  const renderIcon = (screen: string, focused: boolean) => {
+  const renderTab = (screen: string, focused: boolean) => {
     const iconColor = focused ? theme.colors.primary : theme.colors.mainTextColor;
 
     switch (screen) {
       case Screens.Main:
-        return <Ionicons name="md-home" size={32} color={iconColor} />;
+        return (
+          <StyledTabHolder>
+            <Ionicons name="md-home" size={26} color={iconColor} />
+            <StyledText focused={focused}>{Screens.Home}</StyledText>
+          </StyledTabHolder>
+        );
       case Screens.Contacts:
-        return <Ionicons name="list" size={35} color={iconColor} />;
+        return (
+          <StyledTabHolder>
+            <Ionicons name="list" size={26} color={iconColor} />
+            <StyledText focused={focused}>{Screens.Contacts}</StyledText>
+          </StyledTabHolder>
+        );
       case Screens.Articles:
-        return <Ionicons name="md-newspaper" size={32} color={iconColor} />;
+        return (
+          <StyledTabHolder>
+            <Ionicons name="md-newspaper" size={26} color={iconColor} />
+            <StyledText focused={focused}>{Screens.Articles}</StyledText>
+          </StyledTabHolder>
+        );
       case Screens.Add:
-        return <Ionicons name="add-circle-outline" size={32} color={iconColor} />;
+        return (
+          <StyledTabHolder>
+            <Ionicons name="add-circle-outline" size={26} color={iconColor} />
+            <StyledText focused={focused}>{Screens.Add}</StyledText>
+          </StyledTabHolder>
+        );
     }
   };
 
@@ -54,7 +87,7 @@ export default function TabBar({ state, descriptors, navigation }: BottomTabBarP
             accessibilityLabel={options.tabBarAccessibilityLabel}
             onPress={() => onTabPress(route)}
           >
-            {renderIcon(route.name, isFocused)}
+            {renderTab(route.name, isFocused)}
           </TouchableOpacity>
         );
       })}

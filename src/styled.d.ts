@@ -6,9 +6,11 @@ declare module 'styled-components' {
       primary: string;
       secondary: string;
       mainBackgroundColor: string;
+      secondaryBackgroundColor: string;
       mainTextColor: string;
       secondaryTextColor: string;
       error: string;
+      disabled: string
     };
     fonts: {
       primaryThin: string;

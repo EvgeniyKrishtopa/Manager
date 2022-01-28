@@ -3,7 +3,7 @@ import 'dotenv/config';
 export default {
   expo: {
     name: 'Super Manager',
-    slug: 'Super Manager',
+    slug: 'Super-Manager',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
