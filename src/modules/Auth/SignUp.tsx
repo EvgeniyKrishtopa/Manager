@@ -3,13 +3,8 @@ import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components';
 import LoginForm from 'components/Forms/LoginForm';
-import {
-  StyledWrapper,
-  StyledTextInfo,
-  StyledInfoWrapper,
-  StyledSignUpIconHolder,
-  StyledTitle,
-} from './SignIn';
+import { StyledTextInfo, StyledInfoWrapper, StyledSignUpIconHolder, StyledTitle } from './SignIn';
+import { StyledScreenWrapper } from 'components/Styled/Index';
 import { Screens, AuthInfo } from 'typings/enums';
 import { withNotification } from 'utils/Hocs/withNotification';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
@@ -25,7 +20,7 @@ function SignUp() {
 
   return (
     <TouchableDismissWrappper>
-      <StyledWrapper>
+      <StyledScreenWrapper>
         <StyledInfoWrapper>
           <StyledSignUpIconHolder onPress={goBack}>
             <Ionicons name="arrow-back" size={40} color={theme.colors.primary} />
@@ -34,7 +29,7 @@ function SignUp() {
         </StyledInfoWrapper>
         <StyledTitle>{AuthInfo.SignUp}</StyledTitle>
         <LoginForm SignUp />
-      </StyledWrapper>
+      </StyledScreenWrapper>
     </TouchableDismissWrappper>
   );
 }

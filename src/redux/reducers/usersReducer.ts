@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import firebase from 'services/firebase';
 import {
-  IUser,
+  IUserState,
   IAuthData,
   IUserUpdateDisplayName,
   IUserUploadAvatar,
@@ -10,9 +10,8 @@ import {
 import { IsIOS, getPictureBlob } from 'utils/helpers';
 
 const auth = firebase.auth();
-const db = firebase.firestore().collection('User');
 
-const initialState: IUser = {
+const initialState: IUserState = {
   loading: false,
   userData: null,
   error: '',

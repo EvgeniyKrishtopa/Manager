@@ -6,9 +6,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs/src/types';
 import { NavigationContainer } from '@react-navigation/native';
+import { CardStyleInterpolators } from '@react-navigation/stack';
 import { useTheme } from 'styled-components';
 import Home from 'modules/Home/Index';
 import Articles from 'modules/Articles/Index';
+import FullViewArticle from 'modules/FullViewArticle/Index';
 import Contacts from 'modules/Contacts/Index';
 import Settings from 'modules/Settings/Index';
 import Add from 'modules/Add/Index';
@@ -20,15 +22,16 @@ import LogOutButton from 'components/LogOut/Index';
 import SettingsButton from 'components/Settings/Index';
 import { Screens } from 'typings/enums';
 
-type BottomTabStackParamList = {
+export type BottomTabStackParamList = {
   Main: undefined;
   Home: undefined;
   Contacts: undefined;
   Articles: undefined;
+  FullViewArticle: undefined;
   Add: undefined;
 };
 
-type AuthStackParamsList = {
+export type AuthStackParamsList = {
   SignIn: undefined;
   SignUp: undefined;
 };
@@ -56,6 +59,7 @@ const TabNavigatorStack = () => {
     headerTitle: () => <Logo />,
     headerLeft: () => <LogOutButton />,
     headerRight: () => <SettingsButton />,
+    cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
   };
 
   return (
@@ -83,6 +87,7 @@ const MainNavigatorStack = () => {
     headerBackTitleVisible: false,
     headerStyle: { backgroundColor: theme.colors.mainBackgroundColor },
     headerTintColor: theme.colors.primary,
+    cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
   };
 
   return (
@@ -99,6 +104,13 @@ const MainNavigatorStack = () => {
             component={Settings}
             options={optionsSettingsConfig}
           />
+          <MainStack.Group screenOptions={{ presentation: 'modal' }}>
+            <MainStack.Screen
+              name={Screens.FullViewArticle}
+              component={FullViewArticle}
+              options={{ headerShown: false }}
+            />
+          </MainStack.Group>
         </>
       ) : (
         <MainStack.Screen
