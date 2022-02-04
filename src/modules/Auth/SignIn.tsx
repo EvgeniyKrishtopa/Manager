@@ -3,6 +3,7 @@ import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { useTheme } from 'styled-components';
+import { StyledScreenWrapper } from 'components/Styled/Index';
 import LoginForm from 'components/Forms/LoginForm';
 import { Screens, AuthInfo } from 'typings/enums';
 import { withNotification } from 'utils/Hocs/withNotification';
@@ -32,16 +33,6 @@ export const StyledSignUpIconHolder = styled.TouchableOpacity`
   left: 50%;
 `;
 
-export const StyledWrapper = styled.View`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: ${(props) => props.theme.colors.secondaryBackgroundColor};
-`;
-
 export const StyledTitle = styled.Text`
   color: ${(props) => props.theme.colors.secondaryTextColor};
   font-family: ${(props) => props.theme.fonts.primaryBold};
@@ -61,7 +52,7 @@ function SignIn() {
 
   return (
     <TouchableDismissWrappper>
-      <StyledWrapper>
+      <StyledScreenWrapper>
         <StyledInfoWrapper>
           <StyledTextInfo>{AuthInfo.VisitFirst}</StyledTextInfo>
           <StyledSignUpIconHolder onPress={onPressNavigationHandler}>
@@ -70,7 +61,7 @@ function SignIn() {
         </StyledInfoWrapper>
         <StyledTitle>{AuthInfo.SignIn}</StyledTitle>
         <LoginForm SignIn />
-      </StyledWrapper>
+      </StyledScreenWrapper>
     </TouchableDismissWrappper>
   );
 }

@@ -9,6 +9,7 @@ export const withNotification =
   (props: IWithNotificationProps) => (WrappedComponent: ComponentType) => (moreProps: any) => {
     const toast = useToast();
     const { error, loading } = useSelector((state: RootState) => state.users);
+    const { errorArticle, loadingArticle } = useSelector((state: RootState) => state.articles);
     const { textNotification, isNotificationSuccessVisible, isNotificationErrorVisible } = props;
     const toastRender = (textNotification: string | undefined) => {
       toast.show(textNotification || '', {
@@ -25,6 +26,14 @@ export const withNotification =
         toastRender(textNotification);
       }
     }, [error, loading, toast, toastRender]);
+
+    useEffect(() => {
+      if (loadingArticle && isNotificationSuccessVisible) {
+        toastRender(textNotification);
+      } else if (errorArticle?.length && isNotificationErrorVisible) {
+        toastRender(textNotification);
+      }
+    }, [errorArticle, loadingArticle, toast, toastRender]);
 
     return <WrappedComponent {...moreProps} />;
   };

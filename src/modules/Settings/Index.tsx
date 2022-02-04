@@ -2,9 +2,9 @@ import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { RootState } from 'redux/store';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
-import SaveButton from './components/Save';
-import Field from './components/Field';
-import Avatar from './components/Avatar';
+import SaveButton from './components/Save/Index';
+import Field from './components/Field/Index';
+import Avatar from './components/Avatar/Index';
 import { withNotification } from 'utils/Hocs/withNotification';
 import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 import { SettingsLabels, AlertsInfo } from 'typings/enums';
@@ -21,7 +21,6 @@ const StyledTitle = styled.Text`
   font-size: 20px;
   font-family: ${(props) => props.theme.fonts.primaryBold}
   color: ${(props) => props.theme.colors.primary};
-  margin-bottom: 5px;
   padding-top: 40px;
   margin-bottom: 30px;
   text-transform: uppercase;

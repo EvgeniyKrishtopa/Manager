@@ -7,7 +7,8 @@ export enum Screens {
   SignUp = 'SignUp',
   SignIn = 'SignIn',
   Authentication = 'Authentication',
-  Settings = 'Settings'
+  Settings = 'Settings',
+  FullViewArticle = 'FullViewArticle'
 }
 
 export enum AuthInfo {
@@ -33,5 +34,20 @@ export enum AlertsInfo {
   Error = 'Error!',
   Success = 'Success!',
   SettingsAction = 'Settings were changed!',
+  AddNewArticleAction = 'Article was successfully created!',
   ErrorAuthNotification = 'Wrong email or password!',
+}
+
+export enum AddScreenTexts { 
+  First = 'first',
+  Second = 'second',
+  TitleTabFirst = 'Article',
+  TitleTabSecond = 'Contact'
+}
+
+export enum FullArticleView {
+  OpenArticle = 'Open Article',
+  EditArticle = 'Edit Article',
+  SaveChanges = 'Save Changes',
+  GoBack = 'Go Back' 
 }
