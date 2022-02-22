@@ -7,18 +7,26 @@ import { compose } from 'redux';
 import styled from 'styled-components/native';
 import { useTheme } from 'styled-components';
 import { TabView, SceneMap, Route } from 'react-native-tab-view';
-import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
-import CreateArticle from './components/CreateArticle/Index';
-import CreateContact from './components/CreateContact/Index';
+import Creator from './components/Creator/Index';
 import { withNotification } from 'utils/Hocs/withNotification';
-import { AddScreenTexts, AlertsInfo } from 'typings/enums';
+import ErrorBoundary from 'utils/ErrorBoundary';
+import { AddScreenTexts, Errors } from 'typings/enums';
 import { StyledTitle } from 'components/Styled/Index';
 
+const Wrapper = styled.View`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${(props) => props.theme.colors.secondaryBackgroundColor};
+`;
 const StyledTabBar = styled.View`
   display: flex;
   flex-direction: row;
   background-color: ${(props) => props.theme.colors.primary};
+  margin-bottom: 10px;
 `;
 const StyledTabItem = styled.TouchableOpacity`
   display: flex;
@@ -47,8 +55,8 @@ function Add() {
 
   const theme = useTheme();
 
-  const FirstRoute = () => <CreateArticle id={id} />;
-  const SecondRoute = () => <CreateContact />;
+  const FirstRoute = () => <Creator id={id} type="article" />;
+  const SecondRoute = () => <Creator id={id} type="contact" />;
 
   const renderScene = SceneMap({
     first: FirstRoute,
@@ -92,24 +100,24 @@ function Add() {
   };
 
   return (
-    <TouchableDismissWrappper>
-      <>
-        <StyledTitle>Add a New:</StyledTitle>
-        <TabView
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          renderTabBar={renderTabBar}
-        />
-      </>
-    </TouchableDismissWrappper>
+    <ErrorBoundary message={Errors.Error}>
+      <TouchableDismissWrappper>
+        <Wrapper>
+          <StyledTitle>Add a New:</StyledTitle>
+          <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            renderTabBar={renderTabBar}
+          />
+        </Wrapper>
+      </TouchableDismissWrappper>
+    </ErrorBoundary>
   );
 }
 
 export default compose(
-  withBackgroundImage(Add),
   withNotification({
-    textNotification: AlertsInfo.SettingsAction,
     isNotificationErrorVisible: true,
     isNotificationSuccessVisible: true,
   })(Add),

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components';
-import LoginForm from 'components/Forms/LoginForm';
+import FormLogin from 'components/Forms/FormLogin/FormLogin';
 import { StyledTextInfo, StyledInfoWrapper, StyledSignUpIconHolder, StyledTitle } from './SignIn';
 import { StyledScreenWrapper } from 'components/Styled/Index';
 import { Screens, AuthInfo } from 'typings/enums';
@@ -28,7 +28,7 @@ function SignUp() {
           <StyledTextInfo>{AuthInfo.GoBack}</StyledTextInfo>
         </StyledInfoWrapper>
         <StyledTitle>{AuthInfo.SignUp}</StyledTitle>
-        <LoginForm SignUp />
+        <FormLogin SignUp />
       </StyledScreenWrapper>
     </TouchableDismissWrappper>
   );

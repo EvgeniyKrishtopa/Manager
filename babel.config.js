@@ -20,6 +20,12 @@ module.exports = function (api) {
         },
       ],
       'react-native-reanimated/plugin',
+      [
+        'transform-inline-environment-variables',
+        {
+          include: ['NODE_ENV'],
+        },
+      ],
     ],
   };
 };

@@ -1,4 +1,6 @@
-import { Platform } from 'react-native';
+import { Platform, Dimensions } from 'react-native';
+import { PhoneNumberUtil } from 'google-libphonenumber';
+import moment, { Moment } from 'moment';
 
 export const IsIOS = Platform.OS === 'android' ? false : true;
 
@@ -15,4 +17,40 @@ export const getPictureBlob = (uri: string) => {
     xhr.open('GET', uri, true);
     xhr.send(null);
   });
+};
+
+export const getFormattedDate = (date: Moment) => {
+  return moment(date).format('MMMM Do YYYY');
+};
+
+const phoneUtil = PhoneNumberUtil.getInstance();
+
+export const phoneValidate = (value: string) => {
+  try {
+    const number = phoneUtil.parseAndKeepRawInput(value);
+    const regionCode = phoneUtil.getRegionCodeForNumber(number);
+    const numberWithCode = phoneUtil.parseAndKeepRawInput(value, regionCode);
+    const isPossible = phoneUtil.isPossibleNumber(numberWithCode);
+    const isValid = phoneUtil.isValidNumber(numberWithCode);
+    const formattedNumber = phoneUtil.formatInOriginalFormat(numberWithCode, regionCode);
+    const dataValidation = { isPossible, isValid, formattedNumber };
+    return dataValidation;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+export const uidCleaner = (uid: string) => {
+  return uid.replace(/-/g, '');
+};
+
+export const getDimensions = () => {
+  const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
+
+  return {
+    windowWidth,
+    windowHeight,
+  };
 };

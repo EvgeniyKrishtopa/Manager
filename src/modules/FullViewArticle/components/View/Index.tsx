@@ -4,8 +4,9 @@ import styled from 'styled-components/native';
 import { StyledTitle } from 'components/Styled/Index';
 
 const StyledWrapper = styled.View`
-  padding-top: 30px;
+  padding: 0px 30px;
 `;
+
 const StyledDescription = styled.Text`
   font-size: 16px;
   color: ${(props) => props.theme.colors.primary};

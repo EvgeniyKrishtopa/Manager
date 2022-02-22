@@ -8,7 +8,10 @@ export enum Screens {
   SignIn = 'SignIn',
   Authentication = 'Authentication',
   Settings = 'Settings',
-  FullViewArticle = 'FullViewArticle'
+  FullViewArticle = 'FullViewArticle',
+  FullViewContact = 'FullViewContact',
+  EditArticle = 'EditArticle',
+  EditContact = 'EditContact',
 }
 
 export enum AuthInfo {
@@ -30,11 +33,26 @@ export enum AvatarUpload {
   UploadAvatar = 'Upload Avatar'
 }
 
+export enum ManageActivities {
+  Add = 'Add',
+  Delete = 'Delete',
+  Edit = 'Edit'
+}
+
+export enum UserActivities {
+  Update  = 'Update',
+}
+
 export enum AlertsInfo {
   Error = 'Error!',
   Success = 'Success!',
   SettingsAction = 'Settings were changed!',
   AddNewArticleAction = 'Article was successfully created!',
+  EditArticleAction = 'Article was changed!',
+  RemoveArticleAction = 'Article was deleted!',
+  AddNewContactAction = 'Contact was successfully created!',
+  EditContactAction = 'Contact was changed!',
+  RemoveContactAction = 'Contact was deleted!',
   ErrorAuthNotification = 'Wrong email or password!',
 }
 
@@ -48,6 +66,36 @@ export enum AddScreenTexts {
 export enum FullArticleView {
   OpenArticle = 'Open Article',
   EditArticle = 'Edit Article',
-  SaveChanges = 'Save Changes',
-  GoBack = 'Go Back' 
+}
+
+export enum FullContactView {
+  OpenContact = 'Open Contact',
+  EditContact = 'Edit Contact',
+}
+
+export enum FieldsContact {
+  required = 'Required',
+  firstName = 'First Name',
+  lastName = 'Last Name',
+  phoneNumber = 'Phone Number',
+  dateOfBirth = 'Date Of Birth',
+  avatar = 'Avatar',
+  email = 'Email',
+  occupation = 'Occupation',
+  website = 'Website',
+  invalidEmail = 'Invalid Email',
+  invalidSite = 'Enter correct url!',
+}
+
+export enum FormSubmit {
+  Submit = 'Submit'
+}
+
+export enum DataPickerButtonText {
+  Pick = 'Pick a date',
+  Hide = 'Hide'
+}
+
+export enum Errors {
+  Error = "Some Error Occurs! It'll be fix soon.Thanks!"
 }
