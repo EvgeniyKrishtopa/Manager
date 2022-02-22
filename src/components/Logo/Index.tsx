@@ -3,9 +3,7 @@ import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { useTheme } from 'styled-components';
-import { IsIOS, getDimensions } from 'utils/helpers';
-
-const { windowWidth } = getDimensions();
+import { IsIOS } from 'utils/helpers';
 
 const StyledLogoHolder = styled.View`
   width: 50px;
@@ -17,7 +15,6 @@ const StyledLogoHolder = styled.View`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: ${windowWidth / 3.8};
 `;
 
 export default function Logo() {
