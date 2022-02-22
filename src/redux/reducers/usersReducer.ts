@@ -8,15 +8,16 @@ import {
   IUserUploadAvatar,
 } from 'typings/interfaces';
 import { IsIOS, getPictureBlob } from 'utils/helpers';
+import { UserActivities } from 'typings/enums';
 
 const auth = firebase.auth();
 
 const initialState: IUserState = {
-  loading: false,
   userData: null,
   error: '',
   isLoginnedUser: false,
   imageURL: null,
+  typeUserAction: '',
 };
 
 export const SignInAction = createAsyncThunk(
@@ -57,16 +58,17 @@ export const LogOutAction = createAsyncThunk(
 
 export const UploadUserImageAction = createAsyncThunk(
   'users/UploadImageAction',
-  async (payload: IUserUploadAvatar, { rejectWithValue }) => {
+  async ({ id, userAvatar }: IUserUploadAvatar, { rejectWithValue }) => {
     try {
-      const filename = payload.userAvatar.substring(payload.userAvatar.lastIndexOf('/') + 1);
-      const uploadUri = IsIOS ? payload.userAvatar.replace('file://', '') : payload.userAvatar;
+      const filename = `${id}-avatar`;
+      const uploadUri = IsIOS ? userAvatar.replace('file://', '') : userAvatar;
       let blob;
 
       const storageRef = firebase.storage().ref(`avatars/${filename}`);
       blob = await getPictureBlob(uploadUri);
       //@ts-ignore
       const snapshot = await storageRef.put(blob);
+      //const snapshot = await storageRef.delete(blob)
       return await snapshot.ref.getDownloadURL();
     } catch (error) {
       return rejectWithValue(error.message);
@@ -96,84 +98,64 @@ export const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
-    checkError: (state) => {
+    clearErrorUser: (state) => {
       state.error = '';
+    },
+    clearTypeUser: (state) => {
+      state.typeUserAction = '';
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(SignInAction.pending, (state) => {
-      state.loading = true;
-    });
     builder.addCase(SignInAction.fulfilled, (state, action) => {
       state.userData = action.payload;
       state.isLoginnedUser = true;
-      state.loading = false;
+      state.typeUserAction = '';
       state.error = '';
     });
     builder.addCase(SignInAction.rejected, (state, action) => {
-      state.loading = false;
       state.isLoginnedUser = false;
       state.error = 'Rejected!';
     });
 
-    builder.addCase(SignUpAction.pending, (state) => {
-      state.loading = true;
-    });
     builder.addCase(SignUpAction.fulfilled, (state, action) => {
       state.userData = action.payload;
       state.isLoginnedUser = true;
-      state.loading = false;
       state.error = '';
     });
     builder.addCase(SignUpAction.rejected, (state, action) => {
-      state.loading = false;
       state.isLoginnedUser = false;
       state.error = 'Rejected!';
     });
 
-    builder.addCase(LogOutAction.pending, (state) => {
-      state.loading = true;
-    });
     builder.addCase(LogOutAction.fulfilled, (state) => {
       state.userData = null;
       state.isLoginnedUser = false;
-      state.loading = false;
       state.error = '';
     });
     builder.addCase(LogOutAction.rejected, (state, action) => {
-      state.loading = false;
       state.isLoginnedUser = true;
       state.error = 'Rejected';
     });
 
-    builder.addCase(UpdateUserAction.pending, (state) => {
-      state.loading = true;
-    });
     builder.addCase(UpdateUserAction.fulfilled, (state, action) => {
-      state.loading = false;
       state.error = '';
       state.userData = action.payload;
+      state.typeUserAction = UserActivities.Update;
     });
     builder.addCase(UpdateUserAction.rejected, (state, action) => {
-      state.loading = false;
       state.error = 'Rejected';
     });
 
-    builder.addCase(UploadUserImageAction.pending, (state) => {
-      state.loading = true;
-    });
     builder.addCase(UploadUserImageAction.fulfilled, (state, action) => {
-      state.loading = false;
       state.error = '';
       state.imageURL = action.payload;
     });
     builder.addCase(UploadUserImageAction.rejected, (state, action) => {
-      state.loading = false;
       state.error = 'Rejected';
     });
   },
 });
 
-export const { checkError } = usersSlice.actions;
+export const { clearErrorUser, clearTypeUser } = usersSlice.actions;
 
 export default usersSlice.reducer;

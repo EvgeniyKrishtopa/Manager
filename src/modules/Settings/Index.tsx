@@ -4,10 +4,11 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
 import SaveButton from './components/Save/Index';
 import Field from './components/Field/Index';
-import Avatar from './components/Avatar/Index';
+import Avatar from 'components/Avatar/Index';
 import { withNotification } from 'utils/Hocs/withNotification';
 import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
-import { SettingsLabels, AlertsInfo } from 'typings/enums';
+import ErrorBoundary from 'utils/ErrorBoundary';
+import { SettingsLabels, Errors } from 'typings/enums';
 
 const StyledContainer = styled.View`
   display: flex;
@@ -47,18 +48,19 @@ function Settings({ navigation }: any) {
   }, [navigation, name, image]);
 
   return (
-    <TouchableDismissWrappper>
-      <StyledContainer>
-        <StyledTitle>Account Settings</StyledTitle>
-        <Avatar value={image} setValue={setImage} />
-        <Field type={SettingsLabels.UserName} value={name} setValue={setName} />
-      </StyledContainer>
-    </TouchableDismissWrappper>
+    <ErrorBoundary message={Errors.Error}>
+      <TouchableDismissWrappper>
+        <StyledContainer>
+          <StyledTitle>Account Settings</StyledTitle>
+          <Avatar value={image} setValue={setImage} />
+          <Field type={SettingsLabels.UserName} value={name} setValue={setName} />
+        </StyledContainer>
+      </TouchableDismissWrappper>
+    </ErrorBoundary>
   );
 }
 
 export default withNotification({
-  textNotification: AlertsInfo.SettingsAction,
   isNotificationErrorVisible: true,
   isNotificationSuccessVisible: true,
 })(Settings);

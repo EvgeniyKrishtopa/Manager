@@ -45,7 +45,7 @@ export default function SaveButton({ userName, userAvatar }: IUserUpdationData) 
       dispatch(UpdateUserAction({ userName }));
       setIsNameChanged(false);
     } else if (isAvatarChanged) {
-      dispatch(UploadUserImageAction({ userAvatar }));
+      dispatch(UploadUserImageAction({ id: userData.uid, userAvatar }));
       setIsAvatarChanged(false);
     }
   };

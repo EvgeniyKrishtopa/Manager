@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { useTheme } from 'styled-components';
 import { StyledScreenWrapper } from 'components/Styled/Index';
-import LoginForm from 'components/Forms/LoginForm';
+import FormLogin from 'components/Forms/FormLogin/FormLogin';
 import { Screens, AuthInfo } from 'typings/enums';
 import { withNotification } from 'utils/Hocs/withNotification';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
@@ -60,7 +60,7 @@ function SignIn() {
           </StyledSignUpIconHolder>
         </StyledInfoWrapper>
         <StyledTitle>{AuthInfo.SignIn}</StyledTitle>
-        <LoginForm SignIn />
+        <FormLogin SignIn />
       </StyledScreenWrapper>
     </TouchableDismissWrappper>
   );

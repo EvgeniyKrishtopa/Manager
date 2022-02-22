@@ -1,18 +1,14 @@
 import React from 'react';
 
-import { useTheme } from 'styled-components';
+import { KeyboardAvoidingView } from 'react-native';
 import { SignInAction, SignUpAction } from 'redux/reducers/usersReducer';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
 import { IAuthData } from 'typings/interfaces';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
-import {
-  StyledInput,
-  TextError,
-  StyledButtonPrimary,
-  StyledButtonTextPrimary,
-} from 'components/Styled/Index';
+import CustomButton from 'components/CustomButton/Index';
+import CustomInput from 'components/CustomInput/Index';
 
 type LoginForm = {
   SignIn?: boolean;
@@ -28,12 +24,17 @@ enum Fields {
   longPassword = 'Too long password!',
 }
 
-export default function LoginForm(props: LoginForm) {
+export default function FormLogin(props: LoginForm) {
   const [dispatch] = useDispatchHook();
-  const theme = useTheme();
+
   const formSubmit = (values: IAuthData) => {
     const data = props.SignIn ? SignInAction(values) : SignUpAction(values);
     dispatch(data);
+  };
+
+  const values = {
+    [Fields.email]: '',
+    [Fields.password]: '',
   };
 
   const SignupSchema = Yup.object().shape({
@@ -47,10 +48,7 @@ export default function LoginForm(props: LoginForm) {
   return (
     <>
       <Formik
-        initialValues={{
-          [Fields.email]: '',
-          [Fields.password]: '',
-        }}
+        initialValues={values}
         validationSchema={SignupSchema}
         onSubmit={(values, { resetForm }) => {
           formSubmit(values);
@@ -64,29 +62,30 @@ export default function LoginForm(props: LoginForm) {
           values,
           errors,
           touched,
+          isValid,
+          dirty,
         }: FormikProps<IAuthData>) => (
-          <>
-            <StyledInput
-              onChangeText={handleChange(Fields.email)}
-              onBlur={handleBlur(Fields.email)}
+          <KeyboardAvoidingView>
+            <CustomInput
+              fieldName={Fields.email}
               value={values.email}
-              placeholder={Fields.email}
-              placeholderTextColor={theme.colors.secondaryTextColor}
+              error={errors.email}
+              touched={touched.email}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              keyboard="email-address"
             />
-            {errors.email && touched.email ? <TextError>{errors.email}</TextError> : null}
-            <StyledInput
-              onChangeText={handleChange(Fields.password)}
-              onBlur={handleBlur(Fields.password)}
+            <CustomInput
+              fieldName={Fields.password}
               value={values.password}
-              placeholder={Fields.password}
-              secureTextEntry
-              placeholderTextColor={theme.colors.secondaryTextColor}
+              error={errors.password}
+              touched={touched.password}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              secureTextEntry={true}
             />
-            {errors.password && touched.password ? <TextError>{errors.password}</TextError> : null}
-            <StyledButtonPrimary onPress={() => handleSubmit()}>
-              <StyledButtonTextPrimary>Submit</StyledButtonTextPrimary>
-            </StyledButtonPrimary>
-          </>
+            <CustomButton handleSubmit={handleSubmit} isDisabled={!(isValid && dirty)} />
+          </KeyboardAvoidingView>
         )}
       </Formik>
     </>

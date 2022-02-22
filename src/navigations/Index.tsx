@@ -11,6 +11,9 @@ import { useTheme } from 'styled-components';
 import Home from 'modules/Home/Index';
 import Articles from 'modules/Articles/Index';
 import FullViewArticle from 'modules/FullViewArticle/Index';
+import FullViewContact from 'modules/FullViewContact/Index';
+import EditArticle from 'modules/EditArticle/Index';
+import EditContact from 'modules/EditContact/Index';
 import Contacts from 'modules/Contacts/Index';
 import Settings from 'modules/Settings/Index';
 import Add from 'modules/Add/Index';
@@ -28,6 +31,9 @@ export type BottomTabStackParamList = {
   Contacts: undefined;
   Articles: undefined;
   FullViewArticle: undefined;
+  EditArticle: undefined;
+  FullViewContact: undefined;
+  EditContact: undefined;
   Add: undefined;
 };
 
@@ -50,11 +56,10 @@ const tabBar = (props: BottomTabBarProps) => {
 const TabNavigatorStack = () => {
   const theme = useTheme();
 
-  const headerOptions: any = {
+  const headerOptions = {
     headerStyle: {
       backgroundColor: theme.colors.mainBackgroundColor,
     },
-    headerTitleAlign: 'center',
     headerTintColor: theme.colors.primary,
     headerTitle: () => <Logo />,
     headerLeft: () => <LogOutButton />,
@@ -90,6 +95,15 @@ const MainNavigatorStack = () => {
     cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
   };
 
+  const optionsFullViewConfig = {
+    headerBackVisible: true,
+    headerBackTitleVisible: false,
+    headerRight: () => <SettingsButton />,
+    headerStyle: { backgroundColor: theme.colors.mainBackgroundColor },
+    headerTintColor: theme.colors.primary,
+    cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+  };
+
   return (
     <MainStack.Navigator>
       {isLoginnedUser && userData ? (
@@ -104,13 +118,46 @@ const MainNavigatorStack = () => {
             component={Settings}
             options={optionsSettingsConfig}
           />
-          <MainStack.Group screenOptions={{ presentation: 'modal' }}>
-            <MainStack.Screen
-              name={Screens.FullViewArticle}
-              component={FullViewArticle}
-              options={{ headerShown: false }}
-            />
-          </MainStack.Group>
+          <MainStack.Screen
+            name={Screens.FullViewArticle}
+            component={FullViewArticle}
+            options={({ route }) => ({
+              //@ts-ignore
+              ...{ title: route?.params?.article?.title },
+              ...optionsFullViewConfig,
+            })}
+          />
+          <MainStack.Screen
+            name={Screens.FullViewContact}
+            component={FullViewContact}
+            options={({ route }) => ({
+              ...{
+                //@ts-ignore
+                title: `${route?.params?.contact?.firstName} ${route?.params?.contact?.lastName}`,
+              },
+              ...optionsFullViewConfig,
+            })}
+          />
+          <MainStack.Screen
+            name={Screens.EditArticle}
+            component={EditArticle}
+            options={({ route }) => ({
+              //@ts-ignore
+              ...{ title: route?.params?.article?.title },
+              ...optionsFullViewConfig,
+            })}
+          />
+          <MainStack.Screen
+            name={Screens.EditContact}
+            component={EditContact}
+            options={({ route }) => ({
+              ...{
+                //@ts-ignore
+                title: `${route?.params?.contact?.firstName} ${route?.params?.contact?.lastName}`,
+              },
+              ...optionsFullViewConfig,
+            })}
+          />
         </>
       ) : (
         <MainStack.Screen
