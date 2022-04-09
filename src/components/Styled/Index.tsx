@@ -4,21 +4,26 @@ type InputProps = {
   heightInput?: number;
 };
 
-export const StyledScreenWrapper = styled.View`
+export type OrientationProps = {
+  orientation: string;
+};
+
+export const StyledScreenWrapper = styled.View<OrientationProps>`
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: ${(props) => (props.orientation === 'Portrait' ? 'center' : 'space-between')};
+  padding: ${(props) => (props.orientation === 'Portrait' ? '10px 0' : '20px 0 60px')};
   align-items: center;
   background-color: ${(props) => props.theme.colors.secondaryBackgroundColor};
 `;
 
 export const StyledTitle = styled.Text`
-  font-size: 18px;
+  font-size: 16px;
   text-transform: uppercase;
-  margin-bottom: 15px;
-  padding-top: 30px;
+  margin-bottom: 10px;
+  padding-top: 10px;
   text-align: center;
   font-family: ${(props) => props.theme.fonts.primaryBold};
   color: ${(props) => props.theme.colors.secondaryTextColor};
@@ -32,14 +37,14 @@ export const StyledInput = styled.TextInput<InputProps>`
   color: ${(props) => props.theme.colors.secondaryTextColor};
   font-size: 16px;
   font-family: ${(props) => props.theme.fonts.primaryMedium};
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   width: 328px;
   height: ${(props) => (props.heightInput ? props.heightInput : 40)}px;
 `;
 
 export const TextError = styled.Text`
-  font-size: 16px;
-  font-family: ${(props) => props.theme.fonts.primaryMedium}
+  font-size: 14px;
+  font-family: ${(props) => props.theme.fonts.primaryMedium};
   color: ${(props) => props.theme.colors.error};
   padding: 5px 0 20px;
   margin-top: -15px;
@@ -66,6 +71,7 @@ export const StyledButtonTextPrimary = styled.Text`
 
 export const StyledCard = styled.View`
   width: 90%;
+  max-width: 620px;
   margin: 0 auto 10px;
   border-radius: 6px;
   overflow: hidden;

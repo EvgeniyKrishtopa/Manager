@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import styled from 'styled-components/native';
 import ItemWrapper from 'components/ItemWrapper/Index';
-import { IItemProps } from 'typings/interfaces';
+import { IDeleteArticleData, IItemProps } from 'typings/interfaces';
+import { DeleteArticleAction } from 'redux/reducers/articlesUserReducer';
+import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
+import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
+import { Screens } from 'typings/enums';
 
 const StyledArticleTitle = styled.Text`
   font-size: 18px;
@@ -27,14 +31,29 @@ const StyledArticleInfo = styled.Text`
   padding: 0 15px 15px;
 `;
 
-export default function Article({ item, userId, openFullScreen }: IItemProps) {
+function Article({ item, userId }: IItemProps) {
   const { title, description, info, created, id } = item.item;
+  const [dispatch] = useDispatchHook();
+  const [navigation] = useNavigationHook(Screens.Articles);
+
+  const deleteArticle = ({ id, userId }: IDeleteArticleData) => {
+    dispatch(DeleteArticleAction({ id, userId }));
+  };
+
+  const openFullScreen = () => {
+    const article = item.item;
+
+    const params = { article };
+    //@ts-ignore
+    navigation.navigate(Screens.FullViewArticle, params);
+  };
 
   return (
     <ItemWrapper
       id={id}
       userId={userId}
       openFullScreen={openFullScreen}
+      deleteArticle={deleteArticle}
       isFrom="article"
       created={created}
     >
@@ -58,3 +77,5 @@ export default function Article({ item, userId, openFullScreen }: IItemProps) {
     </ItemWrapper>
   );
 }
+
+export default memo(Article);

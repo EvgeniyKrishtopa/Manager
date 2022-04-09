@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { DeleteArticleAction } from 'redux/reducers/articlesUserReducer';
 import { DeleteContactAction, DeleteContactImageAction } from 'redux/reducers/contactsUserReducer';
 import { useTheme } from 'styled-components';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
@@ -15,12 +14,15 @@ import {
 import { FullArticleView, FullContactView } from 'typings/enums';
 import { getFormattedDate } from 'utils/helpers';
 import { Moment } from 'moment';
+import { IDeleteArticleData } from 'typings/interfaces';
 
 interface IItemWrapperProps {
   children: JSX.Element;
   userId: string;
   id: string;
-  openFullScreen: (id: string) => void;
+  openFullScreen: () => void;
+  deleteArticle?: (data: IDeleteArticleData) => void;
+  deleteContact?: () => void;
   isFrom: string;
   created: Moment;
 }
@@ -29,34 +31,35 @@ export default function ItemWrapper({
   id,
   userId,
   openFullScreen,
+  deleteArticle,
   children,
   created,
   isFrom,
 }: IItemWrapperProps) {
   const theme = useTheme();
   const [dispatch] = useDispatchHook();
-  //TODO - move logic to parent components
+
   const deleteContact = () => {
     dispatch(DeleteContactImageAction({ id }));
     dispatch(DeleteContactAction({ id, userId }));
   };
 
-  const deleteArticleHandler = () => {
-    isFrom === 'article' ? dispatch(DeleteArticleAction({ id, userId })) : deleteContact();
+  const deleteItemHandler = () => {
+    isFrom === 'article' && deleteArticle ? deleteArticle({ id, userId }) : deleteContact();
   };
 
-  const openFullArticleHandler = () => {
-    openFullScreen(id);
+  const openFullItemHandler = () => {
+    openFullScreen && openFullScreen();
   };
 
   return (
     <StyledCard>
       {children}
       {created ? <StyledDatePost>{getFormattedDate(created)}</StyledDatePost> : null}
-      <StyledIconDeleteWrapper onPress={deleteArticleHandler}>
+      <StyledIconDeleteWrapper onPress={deleteItemHandler}>
         <AntDesign name="delete" size={24} color={theme.colors.secondaryBackgroundColor} />
       </StyledIconDeleteWrapper>
-      <StyledOpenFullCardWrapper onPress={openFullArticleHandler}>
+      <StyledOpenFullCardWrapper onPress={openFullItemHandler}>
         <StyledOpenFullCardText>
           {isFrom === 'article' ? FullArticleView.OpenArticle : FullContactView.OpenContact}
         </StyledOpenFullCardText>

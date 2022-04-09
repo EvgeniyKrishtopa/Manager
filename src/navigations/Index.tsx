@@ -21,8 +21,10 @@ import SignUp from 'modules/Auth/SignUp';
 import SignIn from 'modules/Auth/SignIn';
 import TabBar from 'components/TabBar/Index';
 import Logo from 'components/Logo/Index';
-import LogOutButton from 'components/LogOut/Index';
-import SettingsButton from 'components/Settings/Index';
+import HeaderRight from 'components/HeaderRight/Index';
+import { withNotification } from 'utils/Hocs/withNotification';
+import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
+import { IsIOS } from 'utils/helpers';
 import { Screens } from 'typings/enums';
 
 export type BottomTabStackParamList = {
@@ -54,16 +56,20 @@ const tabBar = (props: BottomTabBarProps) => {
 };
 
 const TabNavigatorStack = () => {
+  const { orientation } = useGetOrientation();
   const theme = useTheme();
+
+  const height = IsIOS && orientation === 'Landscape' ? 60 : 90;
 
   const headerOptions = {
     headerStyle: {
       backgroundColor: theme.colors.mainBackgroundColor,
+      height,
     },
     headerTintColor: theme.colors.primary,
-    headerTitle: () => <Logo />,
-    headerLeft: () => <LogOutButton />,
-    headerRight: () => <SettingsButton />,
+    title: '',
+    headerLeft: () => <Logo />,
+    headerRight: () => <HeaderRight />,
     cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
   };
 
@@ -85,12 +91,16 @@ const AuthNavigationStack = () => (
 );
 
 const MainNavigatorStack = () => {
-  const theme = useTheme();
   const { isLoginnedUser, userData } = useSelector((state: RootState) => state.users);
+  const { orientation } = useGetOrientation();
+  const theme = useTheme();
+
+  const height = IsIOS && orientation === 'Landscape' ? 60 : 110;
+
   const optionsSettingsConfig = {
     headerBackVisible: true,
     headerBackTitleVisible: false,
-    headerStyle: { backgroundColor: theme.colors.mainBackgroundColor },
+    headerStyle: { backgroundColor: theme.colors.mainBackgroundColor, height },
     headerTintColor: theme.colors.primary,
     cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
   };
@@ -98,8 +108,8 @@ const MainNavigatorStack = () => {
   const optionsFullViewConfig = {
     headerBackVisible: true,
     headerBackTitleVisible: false,
-    headerRight: () => <SettingsButton />,
-    headerStyle: { backgroundColor: theme.colors.mainBackgroundColor },
+    headerRight: () => <HeaderRight isFromFullView={true} />,
+    headerStyle: { backgroundColor: theme.colors.mainBackgroundColor, height },
     headerTintColor: theme.colors.primary,
     cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
   };
@@ -170,10 +180,12 @@ const MainNavigatorStack = () => {
   );
 };
 
-export default function RootStack() {
+function RootStack() {
   return (
     <NavigationContainer>
       <MainNavigatorStack />
     </NavigationContainer>
   );
 }
+
+export default withNotification(RootStack);

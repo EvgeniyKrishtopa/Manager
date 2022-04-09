@@ -1,12 +1,14 @@
 import { FormikErrors } from 'formik';
 import { Dispatch, SetStateAction } from 'react';
+import { ArticleEditType } from 'modules/FullViewContact/Index';
 
 export interface IUserState {
   userData: any | null;
   error: string;
   isLoginnedUser: boolean;
-  imageURL: null | string;
+  imageURL: undefined | string;
   typeUserAction: string;
+  orientation: string;
 }
 export interface IArticle {
   title: string;
@@ -24,22 +26,33 @@ export interface IUserUploadAvatar {
   id: string;
   userAvatar: string;
   avatarId?: string;
+  isOnlyImageUpdated?: boolean;
 }
-export interface IUserUpdationData extends IUserUpdateDisplayName {
-  userAvatar: string;
+export interface IUserUpdationData {
+  saveDataHandler: () => void;
+  isNameChanged: boolean;
+  isAvatarChanged: boolean;
 }
-export interface IWithNotificationProps {
-  textNotification?: string;
-  isNotificationSuccessVisible: boolean;
-  isNotificationErrorVisible: boolean;
+
+export interface IContactDataCreate {
+  dataCreate: ICreateContactData;
+  avatarLink: string;
+}
+export interface IContactDataEdit {
+  dataEdit: ICreateContactData;
+  avatarLink: string;
 }
 export interface IPropsForms {
   id: string;
   type?: string;
-  article? : IArticleManageData | null,
-  contact? : ICreateContactData | null,
-  isCreate? : boolean,
+  article?: IArticleManageData | null;
+  contact?: ICreateContactData | null;
+  isCreate?: boolean;
   avatar?: string;
+  formArticleCreateSubmit?: (dataCreate: IArticleData) => void;
+  formArticleEditSubmit?: (dataEdit: ArticleEditType) => void;
+  formContactCreateSubmit?: (dataCreate: IContactDataCreate) => void;
+  formContactEditSubmit?: (dataEdit: any) => void;
 }
 export interface IArticleData {
   title: string;
@@ -47,7 +60,7 @@ export interface IArticleData {
   info: string;
   date?: string;
   id?: string;
-  userId? : string;
+  userId?: string;
 }
 
 export interface IArticleManageData {
@@ -62,12 +75,17 @@ export interface IArticleState {
   articles: Array<IArticleManageData> | null;
   errorArticle: string;
   typeArticleAction: string;
-  isLoading: boolean;
+  isLoadingArticle: boolean;
 }
 
 export interface IAvatarConfig {
-  link: string;
+  link: string | undefined;
   id: string;
+}
+
+export interface IDeleteArticleData {
+  id: string;
+  userId: string;
 }
 
 export interface ICreateContactData {
@@ -88,7 +106,7 @@ export interface IContactState {
   errorContact: string;
   avatars: Array<IAvatarConfig>;
   typeContactAction: string;
-  isLoading: boolean;
+  isLoadingContact: boolean;
 }
 export interface ICustomInputProp {
   fieldName: string;
@@ -143,13 +161,14 @@ export interface ILocationProps {
   location: ILocation | null;
   setLocation?: Dispatch<SetStateAction<ILocation | null>>;
   mode?: string;
-  isCreate?: boolean
+  isCreate?: boolean;
+  orientation?: string;
 }
 
 export interface IItemProps {
   item: any;
   userId: string;
-  openFullScreen: (id: string) => void;
+  openFullScreen?: () => void;
   avatars?: Array<IAvatarConfig>;
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Dimensions } from 'react-native';
 import { useTheme } from 'styled-components';
@@ -12,7 +12,7 @@ import { IsIOS } from 'utils/helpers';
 import { ILocationProps } from 'typings/interfaces';
 
 const StyledMapWrapper = styled.View`
-  margin: 20px 0 10px;
+  margin: 20px 0;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -31,13 +31,22 @@ export interface IAddress {
   street: string | null;
 }
 
-export default function Map({ location, setLocation, mode = 'creation' }: ILocationProps) {
+export default function Map({
+  location,
+  setLocation,
+  orientation,
+  mode = 'creation',
+}: ILocationProps) {
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [addressData, setAddressData] = useState<IAddress | null>(null);
   const theme = useTheme();
 
-  const mapHeight = IsIOS ? 380 : 320;
+  const mapHeight = IsIOS ? 350 : 320;
+  const mapWidth =
+    orientation === 'Landscape'
+      ? Dimensions.get('window').width - 200
+      : Dimensions.get('window').width;
 
   const throttledCoords = useRef(
     throttle(async ({ latitude, longitude }) => {
@@ -156,7 +165,7 @@ export default function Map({ location, setLocation, mode = 'creation' }: ILocat
     if (longitude && latitude) {
       throttledCoords({ latitude, longitude });
     }
-  }, [longitude, latitude]);
+  }, [longitude, latitude, throttledCoords]);
 
   useEffect(() => {
     return () => {
@@ -185,8 +194,14 @@ export default function Map({ location, setLocation, mode = 'creation' }: ILocat
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
+        provider={PROVIDER_GOOGLE}
         onRegionChange={onRegionChangeHandler}
-        style={{ width: Dimensions.get('window').width, height: mapHeight }}
+        style={{
+          width: mapWidth,
+          height: mapHeight,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
         customMapStyle={mapStyle}
       >
         <Marker draggable coordinate={{ latitude, longitude }} pinColor={theme.colors.primary}>

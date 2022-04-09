@@ -1,24 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/store';
-import {
-  AddNewArticleAction,
-  EditArticleAction,
-  clearLoading,
-} from 'redux/reducers/articlesUserReducer';
 import InputScrollView from 'react-native-input-scroll-view';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import uuid from 'react-native-uuid';
 import CustomButton from 'components/CustomButton/Index';
 import CustomInput from 'components/CustomInput/Index';
-import { ArticleEditType } from 'modules/FullViewContact/Index';
-import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
-import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
+import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
 import { uidCleaner } from 'utils/helpers';
-import { IArticleManageData, IPropsForms, IArticleData } from 'typings/interfaces';
-import { Screens } from 'typings/enums';
+import { IArticleData, IPropsForms } from 'typings/interfaces';
 
 enum Fields {
   title = 'title',
@@ -27,7 +17,13 @@ enum Fields {
   required = 'Required',
 }
 
-export default function FormArticle({ id, article = null, isCreate = true }: IPropsForms) {
+export default function FormArticle({
+  id,
+  formArticleCreateSubmit,
+  formArticleEditSubmit,
+  article = null,
+  isCreate = true,
+}: IPropsForms) {
   const [articleTitle, setArticleTitle] = useState('');
   const [articleDescription, setArticleDescription] = useState('');
   const [articleInfo, setArticleInfo] = useState('');
@@ -37,26 +33,17 @@ export default function FormArticle({ id, article = null, isCreate = true }: IPr
   const [descriptionHeight, setDescriptionHeight] = useState<number>(80);
   const [infoHeight, setInfoHeight] = useState<number>(100);
 
+  const { orientation } = useGetOrientation();
+
   const valueId = useRef<string>('');
 
-  const { articles, isLoading } = useSelector((state: RootState) => state.articles);
-
-  const [navigation] = useNavigationHook(Screens.EditArticle);
-
-  const [dispatch] = useDispatchHook();
+  const InputScrollStyles =
+    orientation === 'Landscape' ? { paddingLeft: 100, paddingRight: 100 } : null;
 
   const values = {
     [Fields.title]: articleTitle,
     [Fields.description]: articleDescription,
     [Fields.info]: articleInfo,
-  };
-
-  const editArticleHandler = (dataEdit: ArticleEditType) => {
-    dispatch(EditArticleAction(dataEdit));
-  };
-
-  const addNewArticleHandler = (dataCreate: IArticleData) => {
-    dispatch(AddNewArticleAction(dataCreate));
   };
 
   useEffect(() => {
@@ -81,39 +68,22 @@ export default function FormArticle({ id, article = null, isCreate = true }: IPr
       valueId.current = '';
     };
   }, []);
-  //TODO - move logic to parent components
-  useEffect(() => {
-    if (!isLoading) {
-      dispatch(clearLoading());
 
-      let article;
-
-      if (!isCreate) {
-        article = articles?.find((item: IArticleManageData) => item.id === articleEditedId);
-      }
-
-      if (article) {
-        const params = { article };
-        //@ts-ignore
-        navigation.navigate(Screens.FullViewArticle, params);
-      } else {
-        navigation.navigate(Screens.Articles);
-      }
-    }
-  }, [isLoading, articles]);
-  //TODO - move logic to parent components
   const formSubmit = (values: IArticleData) => {
     const dataCreate = {
       ...values,
       userId: id,
       id: valueId.current,
     };
+
     const dataEdit = {
       ...values,
       userId: id,
       id: articleEditedId,
     };
-    isCreate ? addNewArticleHandler(dataCreate) : editArticleHandler(dataEdit);
+
+    formArticleCreateSubmit && formArticleCreateSubmit(dataCreate);
+    formArticleEditSubmit && formArticleEditSubmit(dataEdit);
   };
 
   const CreateArticleSchema = Yup.object().shape({
@@ -142,7 +112,7 @@ export default function FormArticle({ id, article = null, isCreate = true }: IPr
         isValid,
         dirty,
       }: FormikProps<IArticleData>) => (
-        <InputScrollView>
+        <InputScrollView keyboardOffset={130} style={InputScrollStyles}>
           <CustomInput
             fieldName={Fields.title}
             value={values.title}

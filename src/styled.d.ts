@@ -10,7 +10,7 @@ declare module 'styled-components' {
       mainTextColor: string;
       secondaryTextColor: string;
       error: string;
-      disabled: string
+      disabled: string;
     };
     fonts: {
       primaryThin: string;

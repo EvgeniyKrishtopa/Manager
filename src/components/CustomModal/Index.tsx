@@ -1,5 +1,5 @@
 import React, { Dispatch, ReactNode, SetStateAction } from 'react';
-
+//@ts-ignore
 import { Modal, ModalContent, SlideAnimation } from 'react-native-modals';
 import styled from 'styled-components/native';
 

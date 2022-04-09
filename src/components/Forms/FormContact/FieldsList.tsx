@@ -1,17 +1,26 @@
 import React, { Dispatch, SetStateAction } from 'react';
 
+import styled from 'styled-components/native';
 import { FormikErrors, FormikTouched } from 'formik';
 import { useTheme } from 'styled-components';
 import CustomInput from 'components/CustomInput/Index';
 import PhoneInput from 'components/PhoneInput/Index';
 import DateInput from 'components/DateInput/Index';
 import Avatar from 'components/Avatar/Index';
-import { FieldsContact } from 'typings/enums';
-import { IValuesData } from './FormContact';
-
-import { ILocationProps } from 'typings/interfaces';
 import MapView from 'components/Map/Index';
+import { OrientationProps } from 'components/Styled/Index';
+import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
+import { IValuesData } from './FormContact';
+import { ILocationProps } from 'typings/interfaces';
+import { FieldsContact } from 'typings/enums';
 
+const StyledInputGroupWrapper = styled.View`
+  align-items: center;
+`;
+
+const StyledMapWrapper = styled.ScrollView<OrientationProps>`
+  padding: ${(props) => (props.orientation === 'Landscape' ? '0 120px' : '0px')};
+`;
 interface IFieldsListProps extends ILocationProps {
   step: number;
   handleChange: any;
@@ -22,7 +31,6 @@ interface IFieldsListProps extends ILocationProps {
   isValidPhone: boolean;
   phoneNumber: string;
   isPhoneBlurredWithoutValue: boolean;
-  isCreate: boolean;
   isDateBlurredWithoutValue: boolean;
   birthDay: string;
   avatarLink: string;
@@ -34,6 +42,11 @@ interface IFieldsListProps extends ILocationProps {
 }
 
 export default function FieldsList(props: IFieldsListProps) {
+  const { orientation } = useGetOrientation();
+
+  const InputScrollStyles =
+    orientation === 'Landscape' ? { paddingLeft: 100, paddingRight: 100 } : null;
+
   const theme = useTheme();
 
   const renderFields = ({
@@ -43,7 +56,6 @@ export default function FieldsList(props: IFieldsListProps) {
     errors,
     touched,
     step,
-    isCreate,
     isValidPhone,
     phoneNumber,
     isPhoneBlurredWithoutValue,
@@ -61,7 +73,7 @@ export default function FieldsList(props: IFieldsListProps) {
     switch (step) {
       case 0:
         return (
-          <>
+          <StyledInputGroupWrapper style={InputScrollStyles}>
             <CustomInput
               fieldName={FieldsContact.firstName}
               value={values['First Name']}
@@ -69,7 +81,7 @@ export default function FieldsList(props: IFieldsListProps) {
               touched={touched['First Name']}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              maxLength={80}
+              maxLength={30}
             />
             <CustomInput
               fieldName={FieldsContact.lastName}
@@ -78,7 +90,7 @@ export default function FieldsList(props: IFieldsListProps) {
               touched={touched['Last Name']}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              maxLength={80}
+              maxLength={30}
             />
             <CustomInput
               fieldName={FieldsContact.occupation}
@@ -86,13 +98,13 @@ export default function FieldsList(props: IFieldsListProps) {
               error={errors['Occupation']}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              maxLength={80}
+              maxLength={40}
             />
-          </>
+          </StyledInputGroupWrapper>
         );
       case 1:
         return (
-          <>
+          <StyledInputGroupWrapper style={InputScrollStyles}>
             <PhoneInput
               phoneNumberHandler={phoneNumberHandler}
               onBlurHandler={onBlurPhoneHandler}
@@ -121,11 +133,11 @@ export default function FieldsList(props: IFieldsListProps) {
               keyboard="url"
               isValidateWithoutTouched
             />
-          </>
+          </StyledInputGroupWrapper>
         );
       case 2:
         return (
-          <>
+          <StyledInputGroupWrapper style={InputScrollStyles}>
             <Avatar value={avatarLink} setValue={setAvatarLink} />
             <DateInput
               dateNumberHandler={dateNumberHandler}
@@ -135,10 +147,14 @@ export default function FieldsList(props: IFieldsListProps) {
               placeholder={FieldsContact.dateOfBirth}
               color={theme.colors.secondaryTextColor}
             />
-          </>
+          </StyledInputGroupWrapper>
         );
       case 3:
-        return <MapView location={location} setLocation={setLocation} isCreate={isCreate} />;
+        return (
+          <StyledMapWrapper orientation={orientation}>
+            <MapView location={location} setLocation={setLocation} />
+          </StyledMapWrapper>
+        );
       default:
         return null;
     }

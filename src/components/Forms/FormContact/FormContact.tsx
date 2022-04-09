@@ -1,26 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/store';
-import {
-  AddNewContactAction,
-  UploadContactImageAction,
-  EditContactAction,
-  clearLoading,
-} from 'redux/reducers/contactsUserReducer';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import uuid from 'react-native-uuid';
 import InputScrollView from 'react-native-input-scroll-view';
-import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
-import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import CustomButton from 'components/CustomButton/Index';
 import { phoneValidate } from 'utils/helpers';
 import { IPropsForms, ILocation, ICreateContactData } from 'typings/interfaces';
 import ButtonStepper from './ButtonStepper';
 import FieldsList from './FieldsList';
-import { FieldsContact, Screens } from 'typings/enums';
-import { uidCleaner } from 'utils/helpers';
+import { FieldsContact } from 'typings/enums';
 
 export interface IValuesData {
   [FieldsContact.firstName]: string;
@@ -32,16 +21,16 @@ export interface IValuesData {
 
 export default function FormContact({
   id,
-  isCreate = true,
   contact = null,
   avatar = '',
+  formContactCreateSubmit,
+  formContactEditSubmit,
 }: IPropsForms) {
   const [contactFirstName, setContactFirstName] = useState<string>('');
   const [contactLastName, setContactLastName] = useState<string>('');
   const [contactEmail, setContactEmail] = useState<string>('');
   const [contactOccupation, setContactOccupation] = useState<string>('');
   const [contactWebsite, setContactWebsite] = useState<string>('');
-  const [contactEditedId, setContactEditedId] = useState<string>('');
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isValidPhone, setIsValidPhone] = useState(false);
@@ -51,11 +40,8 @@ export default function FormContact({
   const [avatarLink, setAvatarLink] = useState<string>('');
   const [location, setLocation] = useState<null | ILocation>(null);
   const [step, setStep] = useState<number>(0);
-  const [dispatch] = useDispatchHook();
 
-  const { contacts, isLoading } = useSelector((state: RootState) => state.contacts);
-
-  const [navigation] = useNavigationHook(Screens.EditContact);
+  const [isValuesChanged, setIsValuesChanged] = useState<boolean>(false);
 
   const STEPS = 4;
 
@@ -68,8 +54,6 @@ export default function FormContact({
   };
 
   const formSubmit = (values: IValuesData) => {
-    const generatedDocId = uuid.v4().toString();
-
     const data: ICreateContactData = {
       firstName: values[FieldsContact.firstName],
       lastName: values[FieldsContact.lastName],
@@ -84,29 +68,11 @@ export default function FormContact({
 
     if (contact) {
       const dataEdit = { ...data, ...{ id: contact.id, userId: id } };
-
-      const avatarEditId = uidCleaner(contact.id);
-      dispatch(EditContactAction(dataEdit));
-      avatarLink.length &&
-        dispatch(
-          UploadContactImageAction({
-            id: contact.id,
-            userAvatar: avatarLink,
-            avatarId: avatarEditId,
-          }),
-        );
+      formContactEditSubmit && formContactEditSubmit({ dataEdit, avatarLink });
     } else {
+      const generatedDocId = uuid.v4().toString();
       const dataCreate = { ...data, docId: generatedDocId };
-      const avatarCreateId = uidCleaner(generatedDocId);
-      dispatch(AddNewContactAction(dataCreate));
-      avatarLink.length &&
-        dispatch(
-          UploadContactImageAction({
-            id: generatedDocId,
-            userAvatar: avatarLink,
-            avatarId: avatarCreateId,
-          }),
-        );
+      formContactCreateSubmit && formContactCreateSubmit({ dataCreate, avatarLink });
     }
   };
 
@@ -176,12 +142,6 @@ export default function FormContact({
   });
 
   useEffect(() => {
-    return () => {
-      setStep(0);
-    };
-  }, []);
-
-  useEffect(() => {
     if (contact) {
       setContactFirstName(contact.firstName);
       setContactLastName(contact.lastName);
@@ -191,7 +151,6 @@ export default function FormContact({
       setPhoneNumber(contact.phoneNumber);
       setBirthDay(contact.birthDay);
       setLocation(contact.location);
-      setContactEditedId(contact.id);
       setIsValidPhone(true);
     }
 
@@ -199,24 +158,26 @@ export default function FormContact({
   }, [contact, avatar]);
 
   useEffect(() => {
-    if (!isLoading) {
-      dispatch(clearLoading());
-
-      let contact;
-
-      if (!isCreate) {
-        contact = contacts?.find((item: ICreateContactData) => item.id === contactEditedId);
-      }
-
-      if (contact) {
-        const params = { contact };
-        //@ts-ignore
-        navigation.navigate(Screens.FullViewContact, params);
+    if (contact) {
+      if (contact.occupation !== contactOccupation) {
+        setIsValuesChanged(true);
+      } else if (contact.phoneNumber !== phoneNumber) {
+        setIsValuesChanged(true);
+      } else if (contact.birthDay !== birthDay) {
+        setIsValuesChanged(true);
+      } else if (contact.location !== location) {
+        setIsValuesChanged(true);
       } else {
-        navigation.navigate(Screens.Contacts);
+        setIsValuesChanged(false);
       }
     }
-  }, [isLoading, contact]);
+  }, [contact, contactOccupation, phoneNumber, birthDay, location]);
+
+  useEffect(() => {
+    if (avatar !== avatarLink) {
+      setIsValuesChanged(true);
+    }
+  }, [avatar, avatarLink]);
 
   return (
     <Formik
@@ -226,11 +187,6 @@ export default function FormContact({
       onSubmit={(values, { resetForm }) => {
         formSubmit(values);
         resetForm();
-
-        setBirthDay('');
-        setAvatarLink('');
-        setLocation(null);
-        setStep(0);
       }}
     >
       {({
@@ -243,9 +199,8 @@ export default function FormContact({
         isValid,
         dirty,
       }: FormikProps<IValuesData>) => (
-        <InputScrollView>
+        <InputScrollView keyboardOffset={200}>
           <FieldsList
-            isCreate={isCreate}
             step={step}
             handleChange={handleChange}
             handleBlur={handleBlur}
@@ -269,7 +224,7 @@ export default function FormContact({
           {step === STEPS - 1 && (
             <CustomButton
               handleSubmit={handleSubmit}
-              isDisabled={!(isValid && dirty && isValidPhone && birthDay)}
+              isDisabled={!(isValid && dirty && isValidPhone && birthDay) && !isValuesChanged}
             />
           )}
           <ButtonStepper step={step} setStep={setStep} stepsAmount={STEPS} />

@@ -26,7 +26,7 @@ const StyledTabHolder = styled.View`
 
 const StyledText = styled.Text<{ focused: boolean }>`
   font-size: 14px;
-  font-family: ${(props) => props.theme.fonts.primaryMedium}
+  font-family: ${(props) => props.theme.fonts.primaryMedium};
   color: ${(props) =>
     props.focused ? props.theme.colors.primary : props.theme.colors.mainTextColor};
 `;

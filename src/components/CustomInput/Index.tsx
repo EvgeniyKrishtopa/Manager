@@ -35,7 +35,11 @@ export default function CustomInput({
         placeholderTextColor={theme.colors.secondaryTextColor}
         keyboardType={keyboard}
         onContentSizeChange={(e) =>
-          setDynamicHeight && setDynamicHeight(e.nativeEvent.contentSize.height + 20)
+          value.length &&
+          heightInput &&
+          setDynamicHeight &&
+          e.nativeEvent.contentSize.height > heightInput &&
+          setDynamicHeight(e.nativeEvent.contentSize.height + 20)
         }
       />
       <ErrorInput
