@@ -18,7 +18,7 @@ export enum AuthInfo {
   SignIn = 'Sign In',
   SignUp = 'Sign Up',
   GoBack = 'Go Back',
-  VisitFirst = 'Dont have an account? Create here!'
+  VisitFirst = 'Dont have an account? Create here!',
 }
 
 export enum SettingsLabels {
@@ -30,17 +30,19 @@ export enum SettingsLabels {
 
 export enum AvatarUpload {
   ChangePhoto = 'Change Photo',
-  UploadAvatar = 'Upload Avatar'
+  UploadAvatar = 'Upload Avatar',
+  Select = 'Select an image',
+  OpenCamera = 'Open camera',
 }
 
 export enum ManageActivities {
   Add = 'Add',
   Delete = 'Delete',
-  Edit = 'Edit'
+  Edit = 'Edit',
 }
 
 export enum UserActivities {
-  Update  = 'Update',
+  Update = 'Update',
 }
 
 export enum AlertsInfo {
@@ -56,11 +58,11 @@ export enum AlertsInfo {
   ErrorAuthNotification = 'Wrong email or password!',
 }
 
-export enum AddScreenTexts { 
+export enum AddScreenTexts {
   First = 'first',
   Second = 'second',
   TitleTabFirst = 'Article',
-  TitleTabSecond = 'Contact'
+  TitleTabSecond = 'Contact',
 }
 
 export enum FullArticleView {
@@ -88,14 +90,31 @@ export enum FieldsContact {
 }
 
 export enum FormSubmit {
-  Submit = 'Submit'
+  Submit = 'Submit',
 }
 
 export enum DataPickerButtonText {
   Pick = 'Pick a date',
-  Hide = 'Hide'
+  Hide = 'Hide',
 }
 
 export enum Errors {
-  Error = "Some Error Occurs! It'll be fix soon.Thanks!"
+  Error = "Some Error Occurs! It'll be fix soon.Thanks!",
+}
+
+export enum Fields {
+  email = 'email',
+  password = 'password',
+  invalid = 'Invalid email',
+  required = 'Required',
+  shortPassword = 'Too short password!',
+  longPassword = 'Too long password!',
+}
+
+export enum OrientationList {
+  unknown = 'UNKNOWN',
+  portraitUp = 'PORTRAIT_UP',
+  portraitDown = 'PORTRAIT_DOWN',
+  landscapeLeft = 'LANDSCAPE_LEFT',
+  landscapeRight = 'LANDSCAPE_RIGHT',
 }

@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
 import styled from 'styled-components/native';
+import InputScrollView from 'react-native-input-scroll-view';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import { BottomTabStackParamList } from 'navigations/Index';
 import View from './components/View/Index';
-import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 import ErrorBoundary from 'utils/ErrorBoundary';
 import { IArticleManageData } from 'typings/interfaces';
 import { FullArticleView, Screens, Errors } from 'typings/enums';
 
-const StyledWrapper = styled.View`
+const StyledWrapper = styled.SafeAreaView`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -50,8 +50,6 @@ interface INavProp {
   route: RouteProps;
 }
 
-//TODO - add scrollView for content overflow
-
 function FullViewArticle({ route }: INavProp) {
   const [article, setArticle] = useState<null | IArticleManageData>(null);
   const [titleArticle, setTitleArticle] = useState<string>('');
@@ -71,7 +69,6 @@ function FullViewArticle({ route }: INavProp) {
   useEffect(() => {
     //@ts-ignore
     const { article } = route.params;
-
     if (article) {
       setArticle(article);
 
@@ -85,14 +82,14 @@ function FullViewArticle({ route }: INavProp) {
 
   return (
     <ErrorBoundary message={Errors.Error}>
-      <TouchableDismissWrappper>
+      <InputScrollView>
         <StyledWrapper>
           <View title={titleArticle} description={descriptionArticle} info={infoArticle} />
           <StyledOpenFullArticleWrapper onPress={onEditScreenOpen}>
             <StyledOpenFullArticleText>{FullArticleView.EditArticle}</StyledOpenFullArticleText>
           </StyledOpenFullArticleWrapper>
         </StyledWrapper>
-      </TouchableDismissWrappper>
+      </InputScrollView>
     </ErrorBoundary>
   );
 }

@@ -1,35 +1,25 @@
 import React from 'react';
 
-import { KeyboardAvoidingView } from 'react-native';
-import { SignInAction, SignUpAction } from 'redux/reducers/usersReducer';
+import { Keyboard, KeyboardAvoidingView } from 'react-native';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
 import { IAuthData } from 'typings/interfaces';
-import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
 import CustomButton from 'components/CustomButton/Index';
 import CustomInput from 'components/CustomInput/Index';
+import { Fields } from 'typings/enums';
 
 type LoginForm = {
-  SignIn?: boolean;
-  SignUp?: boolean;
+  onSignInSubmitData?: (values: IAuthData) => void;
+  onSignUpSubmitData?: (values: IAuthData) => void;
 };
 
-enum Fields {
-  email = 'email',
-  password = 'password',
-  invalid = 'Invalid email',
-  required = 'Required',
-  shortPassword = 'Too short password!',
-  longPassword = 'Too long password!',
-}
-
-export default function FormLogin(props: LoginForm) {
-  const [dispatch] = useDispatchHook();
-
+export default function FormLogin({ onSignInSubmitData, onSignUpSubmitData }: LoginForm) {
   const formSubmit = (values: IAuthData) => {
-    const data = props.SignIn ? SignInAction(values) : SignUpAction(values);
-    dispatch(data);
+    Keyboard.dismiss();
+
+    onSignInSubmitData && onSignInSubmitData(values);
+    onSignUpSubmitData && onSignUpSubmitData(values);
   };
 
   const values = {
@@ -50,9 +40,8 @@ export default function FormLogin(props: LoginForm) {
       <Formik
         initialValues={values}
         validationSchema={SignupSchema}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={(values) => {
           formSubmit(values);
-          resetForm();
         }}
       >
         {({
@@ -65,7 +54,7 @@ export default function FormLogin(props: LoginForm) {
           isValid,
           dirty,
         }: FormikProps<IAuthData>) => (
-          <KeyboardAvoidingView>
+          <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={10}>
             <CustomInput
               fieldName={Fields.email}
               value={values.email}

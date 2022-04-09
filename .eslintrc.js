@@ -21,7 +21,9 @@ module.exports = {
     ecmaVersion: 13,
     sourceType: 'module',
     project: ['./tsconfig.json'],
+    tsconfigRootDir: __dirname
   },
+  ignorePatterns: ["/*.*"],
   parser: '@typescript-eslint/parser',
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
   rules: {

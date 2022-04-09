@@ -8,7 +8,7 @@ import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
 import { Entypo } from '@expo/vector-icons';
 
 const StyledLogOutButton = styled.TouchableOpacity`
-  margin: 5px 12px;
+  margin: 5px 10px;
 `;
 
 export default function LogOutButton() {

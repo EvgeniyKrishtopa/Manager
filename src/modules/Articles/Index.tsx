@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+
 import { FlatList, RefreshControl } from 'react-native';
 import { RootState } from 'redux/store';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
-import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import { FetchArticlesAction } from 'redux/reducers/articlesUserReducer';
 import { StyledTitle, StyledItemsWrapper, StyledNoItemsYet } from 'components/Styled/Index';
 import Article from './components/Article/Index';
 import Loader from 'components/Loader/Index';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 import ErrorBoundary from 'utils/ErrorBoundary';
-import { IArticleManageData } from 'typings/interfaces';
-import { Screens, Errors } from 'typings/enums';
+import { Errors } from 'typings/enums';
 
 function Articles() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const { userData } = useSelector((state: RootState) => state.users);
   const { articles } = useSelector((state: RootState) => state.articles);
-  const [navigation] = useNavigationHook(Screens.Articles);
+
   const [dispatch] = useDispatchHook();
   const theme = useTheme();
 
-  const getDataRequest = () => dispatch(FetchArticlesAction({ id: userData.uid }));
+  const getDataRequest = useCallback(() => {
+    dispatch(FetchArticlesAction({ id: userData.uid }));
+  }, [dispatch, userData]);
 
   const fetchData = () => {
     getDataRequest();
@@ -35,19 +36,11 @@ function Articles() {
     fetchData();
   };
 
-  const openFullScreen = (id: string) => {
-    const article = articles?.find((item: IArticleManageData) => item.id === id);
-
-    const params = { article };
-    //@ts-ignore
-    navigation.navigate(Screens.FullViewArticle, params);
-  };
-
   useEffect(() => {
     if (userData) {
       getDataRequest();
     }
-  }, [userData, dispatch]);
+  }, [userData, getDataRequest, dispatch]);
 
   useEffect(() => {
     setIsLoading(false);
@@ -67,11 +60,10 @@ function Articles() {
         <StyledTitle>Articles</StyledTitle>
         <FlatList
           data={articles}
-          renderItem={(item) => (
-            <Article item={item} userId={userData.uid} openFullScreen={openFullScreen} />
-          )}
+          renderItem={(item) => <Article item={item} userId={userData.uid} />}
           keyExtractor={(item) => item?.created?.toString()}
           progressViewOffset={100}
+          initialNumToRender={4}
           refreshControl={
             <RefreshControl
               tintColor={theme.colors.primary}

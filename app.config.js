@@ -5,7 +5,7 @@ export default {
     name: 'Super Manager',
     slug: 'Super-Manager',
     version: '1.0.0',
-    orientation: 'portrait',
+    orientation: 'default',
     icon: './assets/icon.png',
     splash: {
       image: './assets/splash.png',
@@ -17,9 +17,12 @@ export default {
     },
     assetBundlePatterns: ['**/*'],
     ios: {
+      bundleIdentifier: "com.evgeniyKrishtopa.SuperManager",
+      buildNumber: "1.0.0",
       supportsTablet: true,
     },
     android: {
+      package: "com.evgeniyKrishtopa.SuperManager",
       adaptiveIcon: {
         foregroundImage: './assets/icon.png',
         backgroundColor: '#88b4d5',

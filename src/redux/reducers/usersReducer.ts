@@ -16,18 +16,41 @@ const initialState: IUserState = {
   userData: null,
   error: '',
   isLoginnedUser: false,
-  imageURL: null,
+  imageURL: undefined,
   typeUserAction: '',
+  orientation: 'PORTRAIT_UP',
 };
 
 export const SignInAction = createAsyncThunk(
   'users/signInAction',
+  // eslint-disable-next-line @typescript-eslint/require-await
   async (payload: IAuthData, { rejectWithValue }) => {
     try {
       const response = auth.signInWithEmailAndPassword(payload.email, payload.password);
-      return (await response).user;
+      const fetchImages = async () => {
+        const avatars = await firebase.storage().ref().child('avatars').listAll();
+        const avatarsUrlPromises = avatars.items.map((imageRef) => imageRef.getDownloadURL());
+
+        return Promise.all(avatarsUrlPromises);
+      };
+
+      const loadImages = async () => {
+        const urls = await fetchImages();
+        const id = (await response).user?.uid;
+
+        if (id) {
+          const avatar = urls.find((item) => item.includes(id));
+          return {
+            user: (await response).user,
+            avatarUrl: avatar,
+          };
+        }
+      };
+
+      const authData = loadImages();
+      return authData;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   },
 );
@@ -39,7 +62,7 @@ export const SignUpAction = createAsyncThunk(
       const response = auth.createUserWithEmailAndPassword(payload.email, payload.password);
       return (await response).user;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   },
 );
@@ -51,27 +74,32 @@ export const LogOutAction = createAsyncThunk(
       const response = auth.signOut();
       return response;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   },
 );
 
 export const UploadUserImageAction = createAsyncThunk(
   'users/UploadImageAction',
-  async ({ id, userAvatar }: IUserUploadAvatar, { rejectWithValue }) => {
+  async (
+    { id, userAvatar, isOnlyImageUpdated = false }: IUserUploadAvatar,
+    { rejectWithValue },
+  ) => {
     try {
       const filename = `${id}-avatar`;
       const uploadUri = IsIOS ? userAvatar.replace('file://', '') : userAvatar;
-      let blob;
-
       const storageRef = firebase.storage().ref(`avatars/${filename}`);
-      blob = await getPictureBlob(uploadUri);
+      const blob = await getPictureBlob(uploadUri);
       //@ts-ignore
       const snapshot = await storageRef.put(blob);
-      //const snapshot = await storageRef.delete(blob)
-      return await snapshot.ref.getDownloadURL();
+      const result = {
+        image: await snapshot.ref.getDownloadURL(),
+        isOnlyImageUpdated,
+      };
+
+      return result;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   },
 );
@@ -80,7 +108,7 @@ export const UpdateUserAction = createAsyncThunk(
   'users/UpdateCurrentUserAction',
   async (payload: IUserUpdateDisplayName, { rejectWithValue }) => {
     try {
-      const response = auth.currentUser?.updateProfile({
+      const response = await auth.currentUser?.updateProfile({
         displayName: payload.userName,
       });
 
@@ -89,7 +117,7 @@ export const UpdateUserAction = createAsyncThunk(
       }
       return auth.currentUser;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   },
 );
@@ -104,15 +132,22 @@ export const usersSlice = createSlice({
     clearTypeUser: (state) => {
       state.typeUserAction = '';
     },
+    changeOrientation: (state, action) => {
+      state.orientation = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(SignInAction.fulfilled, (state, action) => {
-      state.userData = action.payload;
+      state.userData = action.payload?.user;
       state.isLoginnedUser = true;
       state.typeUserAction = '';
       state.error = '';
+
+      if (!state.imageURL) {
+        state.imageURL = action.payload?.avatarUrl;
+      }
     });
-    builder.addCase(SignInAction.rejected, (state, action) => {
+    builder.addCase(SignInAction.rejected, (state) => {
       state.isLoginnedUser = false;
       state.error = 'Rejected!';
     });
@@ -122,7 +157,7 @@ export const usersSlice = createSlice({
       state.isLoginnedUser = true;
       state.error = '';
     });
-    builder.addCase(SignUpAction.rejected, (state, action) => {
+    builder.addCase(SignUpAction.rejected, (state) => {
       state.isLoginnedUser = false;
       state.error = 'Rejected!';
     });
@@ -132,7 +167,8 @@ export const usersSlice = createSlice({
       state.isLoginnedUser = false;
       state.error = '';
     });
-    builder.addCase(LogOutAction.rejected, (state, action) => {
+
+    builder.addCase(LogOutAction.rejected, (state) => {
       state.isLoginnedUser = true;
       state.error = 'Rejected';
     });
@@ -142,20 +178,24 @@ export const usersSlice = createSlice({
       state.userData = action.payload;
       state.typeUserAction = UserActivities.Update;
     });
-    builder.addCase(UpdateUserAction.rejected, (state, action) => {
+    builder.addCase(UpdateUserAction.rejected, (state) => {
       state.error = 'Rejected';
     });
 
     builder.addCase(UploadUserImageAction.fulfilled, (state, action) => {
       state.error = '';
-      state.imageURL = action.payload;
+      state.imageURL = action.payload.image;
+
+      if (action.payload.isOnlyImageUpdated) {
+        state.typeUserAction = UserActivities.Update;
+      }
     });
-    builder.addCase(UploadUserImageAction.rejected, (state, action) => {
+    builder.addCase(UploadUserImageAction.rejected, (state) => {
       state.error = 'Rejected';
     });
   },
 });
 
-export const { clearErrorUser, clearTypeUser } = usersSlice.actions;
+export const { clearErrorUser, clearTypeUser, changeOrientation } = usersSlice.actions;
 
 export default usersSlice.reducer;

@@ -3,16 +3,19 @@ import React, { useState } from 'react';
 import { Animated } from 'react-native';
 import { RootState } from 'redux/store';
 import { useSelector } from 'react-redux';
-import { compose } from 'redux';
 import styled from 'styled-components/native';
 import { useTheme } from 'styled-components';
 import { TabView, SceneMap, Route } from 'react-native-tab-view';
-import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 import Creator from './components/Creator/Index';
-import { withNotification } from 'utils/Hocs/withNotification';
-import ErrorBoundary from 'utils/ErrorBoundary';
-import { AddScreenTexts, Errors } from 'typings/enums';
 import { StyledTitle } from 'components/Styled/Index';
+import ErrorBoundary from 'utils/ErrorBoundary';
+import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
+import { getDimensions } from 'utils/helpers';
+import { AddScreenTexts, Errors } from 'typings/enums';
+
+interface ITabBar {
+  width: number;
+}
 
 const Wrapper = styled.View`
   width: 100%;
@@ -22,17 +25,18 @@ const Wrapper = styled.View`
   justify-content: center;
   background-color: ${(props) => props.theme.colors.secondaryBackgroundColor};
 `;
-const StyledTabBar = styled.View`
+
+const StyledTabBar = styled.View<ITabBar>`
   display: flex;
   flex-direction: row;
   background-color: ${(props) => props.theme.colors.primary};
-  margin-bottom: 10px;
+  width: ${(props) => props.width}px;
 `;
 const StyledTabItem = styled.TouchableOpacity`
   display: flex;
-  flex-basis: 50%;
+  width: 50%;
   align-items: center;
-  padding: 16px;
+  padding: 10px;
 `;
 interface IRoutes {
   key: string;
@@ -45,11 +49,14 @@ interface IProps {
 
 function Add() {
   const [index, setIndex] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [routes, setRoutes] = useState<Array<IRoutes>>([
     { key: AddScreenTexts.First, title: AddScreenTexts.TitleTabFirst },
     { key: AddScreenTexts.Second, title: AddScreenTexts.TitleTabSecond },
   ]);
   const { userData } = useSelector((state: RootState) => state.users);
+
+  const { windowWidth } = getDimensions();
 
   const id = userData.uid;
 
@@ -75,7 +82,7 @@ function Add() {
     const inputRange = navigationState.routes.map((x: Route, i: number) => i);
 
     return (
-      <StyledTabBar>
+      <StyledTabBar width={windowWidth}>
         {navigationState.routes.map((route: Route, i: number) => {
           const opacity = position.interpolate({
             inputRange,
@@ -116,9 +123,4 @@ function Add() {
   );
 }
 
-export default compose(
-  withNotification({
-    isNotificationErrorVisible: true,
-    isNotificationSuccessVisible: true,
-  })(Add),
-);
+export default Add;

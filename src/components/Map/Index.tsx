@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useTheme } from 'styled-components';
 import styled from 'styled-components/native';
-
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Map from './Map';
+import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
 import { ILocationProps } from 'typings/interfaces';
-
 export interface IAddress {
   country: string | null;
   city: string | null;
@@ -20,21 +19,24 @@ const StyledCheckboxWrapper = styled.View`
   align-items: center;
 `;
 
-export default function MapView({ location, setLocation, isCreate }: ILocationProps) {
+export default function MapView({ location, setLocation }: ILocationProps) {
   const [isAddMap, setIsAddMap] = useState<boolean>(false);
+  const { orientation } = useGetOrientation();
 
   const theme = useTheme();
 
   const textStyle = { color: theme.colors.primary, fontSize: 20, textDecorationLine: 'none' };
 
-  if (!isCreate) {
-    return <Map location={location} setLocation={setLocation} />;
-  }
+  useEffect(() => {
+    location && setIsAddMap(true);
+  }, [location]);
 
   return (
     <StyledCheckboxWrapper>
       <BouncyCheckbox
         size={20}
+        //@ts-ignore
+        isChecked={location && true}
         fillColor={theme.colors.primary}
         unfillColor={theme.colors.secondaryTextColor}
         text="Add the Location"
@@ -45,7 +47,9 @@ export default function MapView({ location, setLocation, isCreate }: ILocationPr
           setIsAddMap(isChecked);
         }}
       />
-      {isAddMap ? <Map location={location} setLocation={setLocation} /> : null}
+      {isAddMap ? (
+        <Map location={location} setLocation={setLocation} orientation={orientation} />
+      ) : null}
     </StyledCheckboxWrapper>
   );
 }

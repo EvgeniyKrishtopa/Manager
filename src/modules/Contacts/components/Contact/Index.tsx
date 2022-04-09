@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import styled from 'styled-components/native';
 import ItemWrapper from 'components/ItemWrapper/Index';
 import ContactInfo from 'components/ContactInfo/Index';
+import { DeleteContactAction, DeleteContactImageAction } from 'redux/reducers/contactsUserReducer';
 import { IItemProps, IAvatarConfig } from 'typings/interfaces';
+import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
+import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
+import { Screens } from 'typings/enums';
 
 const StyledNameWrapper = styled.View`
   font-size: 18px;
@@ -17,22 +21,37 @@ const StyledName = styled.Text`
   font-size: 18px;
 `;
 
-export default function Contact({ item, userId, avatars, openFullScreen }: IItemProps) {
+function Contact({ item, userId, avatars }: IItemProps) {
   const [avatar, setAvatar] = useState<string>('');
   const { created, id, firstName, lastName } = item.item;
+  const [navigation] = useNavigationHook(Screens.Contacts);
+  const [dispatch] = useDispatchHook();
+
+  const openFullScreen = () => {
+    const contact = item.item;
+    const params = { contact };
+    //@ts-ignore
+    navigation.navigate(Screens.FullViewContact, params);
+  };
+
+  const deleteContact = () => {
+    dispatch(DeleteContactImageAction({ id }));
+    dispatch(DeleteContactAction({ id, userId }));
+  };
 
   useEffect(() => {
     if (avatars?.length) {
       const avatar = avatars.find((item: IAvatarConfig) => item.id === id);
-      avatar && setAvatar(avatar?.link);
+      avatar && avatar.link && setAvatar(avatar.link);
     }
-  }, [avatars, item]);
+  }, [avatars, item, id]);
 
   return (
     <ItemWrapper
       id={id}
       userId={userId}
       openFullScreen={openFullScreen}
+      deleteContact={deleteContact}
       isFrom="contact"
       created={created}
     >
@@ -48,3 +67,5 @@ export default function Contact({ item, userId, avatars, openFullScreen }: IItem
     </ItemWrapper>
   );
 }
+
+export default memo(Contact);

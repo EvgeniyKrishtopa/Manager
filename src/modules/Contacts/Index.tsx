@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import { FlatList, RefreshControl } from 'react-native';
 import { RootState } from 'redux/store';
@@ -10,23 +10,22 @@ import Loader from 'components/Loader/Index';
 import Contact from './components/Contact/Index';
 
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
-import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 import ErrorBoundary from 'utils/ErrorBoundary';
-import { Screens, Errors } from 'typings/enums';
-import { ICreateContactData } from 'typings/interfaces';
+import { Errors } from 'typings/enums';
 
 function Contacts() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const { userData } = useSelector((state: RootState) => state.users);
   const { contacts, avatars } = useSelector((state: RootState) => state.contacts);
-  const [navigation] = useNavigationHook(Screens.Articles);
-  const [dispatch] = useDispatchHook();
 
+  const [dispatch] = useDispatchHook();
   const theme = useTheme();
 
-  const getDataRequest = () => dispatch(FetchContactsAction({ id: userData.uid }));
+  const getDataRequest = useCallback(() => {
+    dispatch(FetchContactsAction({ id: userData.uid }));
+  }, [userData, dispatch]);
 
   const fetchData = () => {
     getDataRequest();
@@ -38,20 +37,11 @@ function Contacts() {
     fetchData();
   };
 
-  const openFullScreen = (id: string) => {
-    if (contacts) {
-      const contact = contacts.find((item: ICreateContactData) => item.id === id);
-      const params = { contact };
-      //@ts-ignore
-      navigation.navigate(Screens.FullViewContact, params);
-    }
-  };
-
   useEffect(() => {
     if (userData) {
       getDataRequest();
     }
-  }, [userData, dispatch]);
+  }, [userData, getDataRequest, dispatch]);
 
   useEffect(() => {
     setIsLoading(false);
@@ -71,16 +61,10 @@ function Contacts() {
         <StyledTitle>Contacts</StyledTitle>
         <FlatList
           data={contacts}
-          renderItem={(item) => (
-            <Contact
-              item={item}
-              userId={userData.uid}
-              openFullScreen={openFullScreen}
-              avatars={avatars}
-            />
-          )}
+          renderItem={(item) => <Contact item={item} userId={userData.uid} avatars={avatars} />}
           keyExtractor={(item) => item?.id}
           progressViewOffset={100}
+          initialNumToRender={4}
           refreshControl={
             <RefreshControl
               tintColor={theme.colors.primary}

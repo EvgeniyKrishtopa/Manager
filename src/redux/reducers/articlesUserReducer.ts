@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import firebase from 'services/firebase';
-import { IArticleData, IArticleState, IArticleManageData } from 'typings/interfaces';
+import {
+  IArticleData,
+  IArticleState,
+  IArticleManageData,
+  IDeleteArticleData,
+} from 'typings/interfaces';
 import { ArticleEditType } from 'modules/FullViewArticle/Index';
 import { ManageActivities } from 'typings/enums';
 
@@ -15,7 +20,7 @@ const initialState: IArticleState = {
   articles: null,
   errorArticle: '',
   typeArticleAction: '',
-  isLoading: true,
+  isLoadingArticle: true,
 };
 
 const getAll = ({ id }: IFetchAll) => {
@@ -42,7 +47,7 @@ export const FetchArticlesAction = createAsyncThunk(
     try {
       return getAll({ id });
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   },
 );
@@ -65,14 +70,14 @@ export const AddNewArticleAction = createAsyncThunk(
           return getAll({ id: userId });
         });
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   },
 );
 
 export const DeleteArticleAction = createAsyncThunk(
   'articles/deleteNewArticle',
-  async ({ id, userId }: { id: string; userId: string }, { rejectWithValue }) => {
+  async ({ id, userId }: IDeleteArticleData, { rejectWithValue }) => {
     try {
       return db
         .doc(userId)
@@ -83,7 +88,7 @@ export const DeleteArticleAction = createAsyncThunk(
           return getAll({ id: userId });
         });
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   },
 );
@@ -105,7 +110,7 @@ export const EditArticleAction = createAsyncThunk(
           return getAll({ id: userId });
         });
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   },
 );
@@ -120,8 +125,8 @@ export const articlesSlice = createSlice({
     clearTypeArticle: (state) => {
       state.typeArticleAction = '';
     },
-    clearLoading: (state) => {
-      state.isLoading = true;
+    clearLoadingArticle: (state) => {
+      state.isLoadingArticle = true;
     },
   },
   extraReducers: (builder) => {
@@ -129,22 +134,22 @@ export const articlesSlice = createSlice({
       state.errorArticle = '';
       state.articles = action.payload;
     });
-    builder.addCase(FetchArticlesAction.rejected, (state, action) => {
+    builder.addCase(FetchArticlesAction.rejected, (state) => {
       state.errorArticle = 'Rejected!';
     });
 
     builder.addCase(AddNewArticleAction.pending, (state) => {
-      state.isLoading = true;
+      state.isLoadingArticle = true;
     });
     builder.addCase(AddNewArticleAction.fulfilled, (state, action) => {
       state.typeArticleAction = ManageActivities.Add;
       state.articles = action.payload;
       state.errorArticle = '';
-      state.isLoading = false;
+      state.isLoadingArticle = false;
     });
-    builder.addCase(AddNewArticleAction.rejected, (state, action) => {
+    builder.addCase(AddNewArticleAction.rejected, (state) => {
       state.errorArticle = 'Rejected!';
-      state.isLoading = true;
+      state.isLoadingArticle = true;
     });
 
     builder.addCase(DeleteArticleAction.fulfilled, (state, action) => {
@@ -152,26 +157,26 @@ export const articlesSlice = createSlice({
       state.typeArticleAction = ManageActivities.Delete;
       state.articles = action.payload;
     });
-    builder.addCase(DeleteArticleAction.rejected, (state, action) => {
+    builder.addCase(DeleteArticleAction.rejected, (state) => {
       state.errorArticle = 'Rejected!';
     });
 
     builder.addCase(EditArticleAction.pending, (state) => {
-      state.isLoading = true;
+      state.isLoadingArticle = true;
     });
     builder.addCase(EditArticleAction.fulfilled, (state, action) => {
       state.errorArticle = '';
       state.articles = action.payload;
       state.typeArticleAction = ManageActivities.Edit;
-      state.isLoading = false;
+      state.isLoadingArticle = false;
     });
-    builder.addCase(EditArticleAction.rejected, (state, action) => {
+    builder.addCase(EditArticleAction.rejected, (state) => {
       state.errorArticle = 'Rejected!';
-      state.isLoading = true;
+      state.isLoadingArticle = true;
     });
   },
 });
 
-export const { clearErrorArticle, clearTypeArticle, clearLoading } = articlesSlice.actions;
+export const { clearErrorArticle, clearTypeArticle, clearLoadingArticle } = articlesSlice.actions;
 
 export default articlesSlice.reducer;

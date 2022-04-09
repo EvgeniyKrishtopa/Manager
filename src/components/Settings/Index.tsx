@@ -7,7 +7,7 @@ import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import { Screens } from 'typings/enums';
 
 const StyledSettingsButton = styled.TouchableOpacity`
-  margin: 5px 12px;
+  margin: 5px 8px;
 `;
 
 export default function SettingsButton() {

@@ -17,7 +17,7 @@ type ButtonSaveProps = {
 
 const StyledWrapper = styled.View`
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 5px;
 `;
 
 const StyledAvatar = styled.Image`
@@ -44,14 +44,14 @@ const StyledSaveButton = styled.TouchableOpacity<ButtonSaveProps>`
 `;
 
 const StyledText = styled.Text`
-  fontSize: 16px;
-  font-family: ${(props) => props.theme.fonts.primaryBold}
+  font-size: 16px;
+  font-family: ${(props) => props.theme.fonts.primaryBold};
   color: ${(props) => props.theme.colors.mainTextColor};
 `;
 
 export default function Avatar({ setValue, value }: IProps) {
-  const theme = useTheme();
   const [isFullImageOpen, setIsFullImageOpen] = useState<boolean>(false);
+  const theme = useTheme();
 
   const onOpenFullImage = () => {
     setIsFullImageOpen(true);
@@ -77,6 +77,21 @@ export default function Avatar({ setValue, value }: IProps) {
     }
   };
 
+  const openCameraAsync = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    const cameraResult = await ImagePicker.launchCameraAsync();
+
+    if (!cameraResult.cancelled) {
+      setValue(cameraResult.uri);
+    }
+  };
+
   return (
     <StyledWrapper>
       {value.length ? (
@@ -91,9 +106,10 @@ export default function Avatar({ setValue, value }: IProps) {
         <Ionicons name="person-circle-outline" size={145} color={theme.colors.primary} />
       )}
       <StyledSaveButton onPress={openImagePickerAsync} isImage={value.length > 0}>
-        <StyledText>
-          {value.length ? AvatarUpload.ChangePhoto : AvatarUpload.UploadAvatar}
-        </StyledText>
+        <StyledText>{AvatarUpload.Select}</StyledText>
+      </StyledSaveButton>
+      <StyledSaveButton onPress={openCameraAsync} isImage={value.length > 0}>
+        <StyledText>{AvatarUpload.OpenCamera}</StyledText>
       </StyledSaveButton>
       <ImageFullViewer urlValue={value} openFullViewImage={isFullImageOpen} />
     </StyledWrapper>

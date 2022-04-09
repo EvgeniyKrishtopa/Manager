@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View, ScrollView } from 'react-native';
 import { RootState } from 'redux/store';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
@@ -8,10 +8,14 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
 import ContactInfo from 'components/ContactInfo/Index';
+import { OrientationProps } from 'components/Styled/Index';
 import Map from 'components/Map/Map';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
-import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
+import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
+import ErrorBoundary from 'utils/ErrorBoundary';
+import { BottomTabStackParamList } from 'navigations/Index';
 import {
   IArticleManageData,
   IAvatarConfig,
@@ -19,9 +23,6 @@ import {
   ILocation,
 } from 'typings/interfaces';
 import { FullContactView, Screens, Errors } from 'typings/enums';
-import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
-import ErrorBoundary from 'utils/ErrorBoundary';
-import { BottomTabStackParamList } from 'navigations/Index';
 
 const StyledWrapper = styled.View`
   display: flex;
@@ -32,6 +33,17 @@ const StyledWrapper = styled.View`
   height: 100%;
   position: relative;
   padding-top: 30px;
+`;
+
+const StyledInfoWrapper = styled.View`
+  align-items: flex-start;
+`;
+
+const StyledBirthdaySiteContainer = styled.View<OrientationProps>`
+  padding-left: 30px;
+  position: ${(props) => (props.orientation === 'Landscape' ? 'absolute' : 'relative')};
+  left: ${(props) => (props.orientation === 'Landscape' ? '45%' : '0px')};
+  top: ${(props) => (props.orientation === 'Landscape' ? '48px' : '0px')};
 `;
 
 const StyledOpenFullArticleWrapper = styled.TouchableOpacity`
@@ -66,6 +78,7 @@ const StyledWebsiteText = styled.Text`
 
 const StyledWebsiteLink = styled(StyledWebsiteText)`
   text-decoration: underline;
+  color: ${(props) => props.theme.colors.mainTextColor};
 `;
 
 const StyledBirthday = styled.Text`
@@ -96,6 +109,7 @@ function FullViewContact({ route }: INavProp) {
   const [navigation] = useNavigationHook(Screens.FullViewContact);
 
   const { avatars } = useSelector((state: RootState) => state.contacts);
+  const { orientation } = useGetOrientation();
 
   const onEditScreenOpen = () => {
     if (contact) {
@@ -112,38 +126,54 @@ function FullViewContact({ route }: INavProp) {
   useEffect(() => {
     //@ts-ignore
     const { contact } = route.params;
+
     setContact(contact);
 
     setBirtdayContact(contact.birthDay);
     setWebsiteContact(contact.webSite);
     setLocationContact(contact.location);
+
     if (avatars?.length) {
       const avatar = avatars.find((item: IAvatarConfig) => item.id === contact.id);
-      avatar && setAvatar(avatar?.link);
+      if (avatar) {
+        avatar.link && setAvatar(avatar.link);
+      }
     }
   }, [route, avatars]);
 
   return (
     <ErrorBoundary message={Errors.Error}>
       <TouchableDismissWrappper>
-        <StyledWrapper>
-          {contact ? <ContactInfo avatar={avatar} isFromFullView={true} item={contact} /> : null}
-          {birthayContact.length ? (
-            <StyledBirthday>{`Birthday: ${birthayContact}`}</StyledBirthday>
-          ) : null}
-          {websiteContact.length ? (
-            <StyledWebsiteWrapper>
-              <StyledWebsiteText>Website: </StyledWebsiteText>
-              <TouchableOpacity onPress={onPressWebSiteLink}>
-                <StyledWebsiteLink>{websiteContact}</StyledWebsiteLink>
-              </TouchableOpacity>
-            </StyledWebsiteWrapper>
-          ) : null}
-          {locationContact ? <Map location={locationContact} mode="View" /> : null}
-          <StyledOpenFullArticleWrapper onPress={onEditScreenOpen}>
-            <StyledOpenFullArticleText>{FullContactView.EditContact}</StyledOpenFullArticleText>
-          </StyledOpenFullArticleWrapper>
-        </StyledWrapper>
+        <ScrollView>
+          <StyledWrapper>
+            <StyledInfoWrapper>
+              {contact ? (
+                <ContactInfo avatar={avatar} isFromFullView={true} item={contact} />
+              ) : null}
+              <StyledBirthdaySiteContainer orientation={orientation}>
+                {birthayContact.length ? (
+                  <StyledBirthday>{`Birthday: ${birthayContact}`}</StyledBirthday>
+                ) : null}
+                {websiteContact.length ? (
+                  <StyledWebsiteWrapper>
+                    <StyledWebsiteText>Website: </StyledWebsiteText>
+                    <TouchableOpacity onPress={onPressWebSiteLink}>
+                      <StyledWebsiteLink>{websiteContact}</StyledWebsiteLink>
+                    </TouchableOpacity>
+                  </StyledWebsiteWrapper>
+                ) : null}
+              </StyledBirthdaySiteContainer>
+            </StyledInfoWrapper>
+            {locationContact ? (
+              <View pointerEvents="none">
+                <Map location={locationContact} mode="View" />
+              </View>
+            ) : null}
+            <StyledOpenFullArticleWrapper onPress={onEditScreenOpen}>
+              <StyledOpenFullArticleText>{FullContactView.EditContact}</StyledOpenFullArticleText>
+            </StyledOpenFullArticleWrapper>
+          </StyledWrapper>
+        </ScrollView>
       </TouchableDismissWrappper>
     </ErrorBoundary>
   );

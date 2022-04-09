@@ -5,14 +5,15 @@ import { AlertsInfo } from 'typings/enums';
 
 const StyledWrapperError = styled.View`
   width: 90%;
-  background-color: ${(props) => props.theme.colors.secondaryTextColor}
+  max-width: 420px;
+  background-color: ${(props) => props.theme.colors.secondaryTextColor};
   height: 70px;
   padding: 10px 15px;
   border-radius: 6px;
   border-left-color: ${(props) => props.theme.colors.error};
   border-left-width: 4px;
   border-style: solid;
-  position: relative; 
+  position: relative;
 `;
 
 const StyledTextTitleError = styled.Text`
