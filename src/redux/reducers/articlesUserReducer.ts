@@ -128,6 +128,9 @@ export const articlesSlice = createSlice({
     clearLoadingArticle: (state) => {
       state.isLoadingArticle = true;
     },
+    clearArticles: (state) => {
+      state.articles = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(FetchArticlesAction.fulfilled, (state, action) => {
@@ -177,6 +180,7 @@ export const articlesSlice = createSlice({
   },
 });
 
-export const { clearErrorArticle, clearTypeArticle, clearLoadingArticle } = articlesSlice.actions;
+export const { clearErrorArticle, clearTypeArticle, clearLoadingArticle, clearArticles } =
+  articlesSlice.actions;
 
 export default articlesSlice.reducer;

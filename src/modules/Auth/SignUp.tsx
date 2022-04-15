@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { RootState } from 'redux/store';
-import { useSelector } from 'react-redux';
 import { SignUpAction } from 'redux/reducers/usersReducer';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components';

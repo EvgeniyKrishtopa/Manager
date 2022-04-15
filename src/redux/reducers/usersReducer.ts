@@ -135,6 +135,9 @@ export const usersSlice = createSlice({
     changeOrientation: (state, action) => {
       state.orientation = action.payload;
     },
+    clearAvatarUser: (state) => {
+      state.imageURL = undefined;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(SignInAction.fulfilled, (state, action) => {
@@ -196,6 +199,7 @@ export const usersSlice = createSlice({
   },
 });
 
-export const { clearErrorUser, clearTypeUser, changeOrientation } = usersSlice.actions;
+export const { clearErrorUser, clearTypeUser, changeOrientation, clearAvatarUser } =
+  usersSlice.actions;
 
 export default usersSlice.reducer;

@@ -241,6 +241,10 @@ export const contactsSlice = createSlice({
     clearLoadingContact: (state) => {
       state.isLoadingContact = true;
     },
+    clearContacts: (state) => {
+      state.contacts = null;
+      state.avatars = [];
+    },
   },
 
   extraReducers: (builder) => {
@@ -335,6 +339,7 @@ export const contactsSlice = createSlice({
   },
 });
 
-export const { clearErrorContact, clearTypeContact, clearLoadingContact } = contactsSlice.actions;
+export const { clearErrorContact, clearTypeContact, clearLoadingContact, clearContacts } =
+  contactsSlice.actions;
 
 export default contactsSlice.reducer;

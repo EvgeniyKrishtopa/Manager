@@ -1,11 +1,12 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
+
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { AvatarUpload } from 'typings/enums';
 import { useTheme } from 'styled-components';
 import styled from 'styled-components/native';
 import ImageFullViewer from 'components/ImageFullViewer/Index';
-
+import Loader from 'components/Loader/Index';
 interface IProps {
   setValue: Dispatch<SetStateAction<string>>;
   value: string;
@@ -14,15 +15,13 @@ interface IProps {
 type ButtonSaveProps = {
   isImage: boolean;
 };
+interface IImageLoading {
+  isLoading: boolean;
+}
 
 const StyledWrapper = styled.View`
   align-items: center;
   margin-bottom: 5px;
-`;
-
-const StyledAvatar = styled.Image`
-  width: 120px;
-  height: 120px;
 `;
 
 const StyledAvatarHolder = styled.TouchableOpacity`
@@ -32,6 +31,17 @@ const StyledAvatarHolder = styled.TouchableOpacity`
   overflow: hidden;
   margin-top: 10px;
   border-color: ${(props) => props.theme.colors.mainTextColor};
+  width: 120px;
+  height: 120px;
+`;
+
+const StyledAvatar = styled.Image<IImageLoading>`
+  width: 120px;
+  height: 120px;
+  opacity: ${(props) => (props.isLoading ? '0' : '1')};
+  position: ${(props) => (props.isLoading ? 'absolute' : 'relative')};
+  left: 0;
+  top: 0;
 `;
 
 const StyledSaveButton = styled.TouchableOpacity<ButtonSaveProps>`
@@ -51,6 +61,8 @@ const StyledText = styled.Text`
 
 export default function Avatar({ setValue, value }: IProps) {
   const [isFullImageOpen, setIsFullImageOpen] = useState<boolean>(false);
+  const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
+
   const theme = useTheme();
 
   const onOpenFullImage = () => {
@@ -97,10 +109,13 @@ export default function Avatar({ setValue, value }: IProps) {
       {value.length ? (
         <StyledAvatarHolder onPress={onOpenFullImage}>
           <StyledAvatar
+            isLoading={isImageLoading}
+            onLoadEnd={() => setIsImageLoading(false)}
             source={{
               uri: value,
             }}
           />
+          {isImageLoading && <Loader />}
         </StyledAvatarHolder>
       ) : (
         <Ionicons name="person-circle-outline" size={145} color={theme.colors.primary} />

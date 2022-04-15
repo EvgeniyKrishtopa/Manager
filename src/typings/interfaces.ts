@@ -1,7 +1,6 @@
 import { FormikErrors } from 'formik';
 import { Dispatch, SetStateAction } from 'react';
 import { ArticleEditType } from 'modules/FullViewContact/Index';
-
 export interface IUserState {
   userData: any | null;
   error: string;
@@ -17,7 +16,6 @@ export interface IAuthData {
   email: string;
   password: string;
 }
-
 export interface IUserUpdateDisplayName {
   userName: string;
 }
@@ -33,7 +31,6 @@ export interface IUserUpdationData {
   isNameChanged: boolean;
   isAvatarChanged: boolean;
 }
-
 export interface IContactDataCreate {
   dataCreate: ICreateContactData;
   avatarLink: string;
@@ -62,7 +59,6 @@ export interface IArticleData {
   id?: string;
   userId?: string;
 }
-
 export interface IArticleManageData {
   created: number;
   description: string;
@@ -82,12 +78,10 @@ export interface IAvatarConfig {
   link: string | undefined;
   id: string;
 }
-
 export interface IDeleteArticleData {
   id: string;
   userId: string;
 }
-
 export interface ICreateContactData {
   firstName: string;
   lastName: string;
@@ -164,14 +158,13 @@ export interface ILocationProps {
   isCreate?: boolean;
   orientation?: string;
 }
-
 export interface IItemProps {
   item: any;
   userId: string;
+  index?: number;
   openFullScreen?: () => void;
   avatars?: Array<IAvatarConfig>;
 }
-
 export interface IContactInfo {
   item: ICreateContactData | null;
   avatar: string;
