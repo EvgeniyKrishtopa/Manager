@@ -95,27 +95,38 @@ function Settings({ navigation }: any) {
   }, [dispatch, image, isAvatarChanged, isNameChanged, name, userData.uid]);
 
   useEffect(() => {
-    if (userData?.providerData?.length && name && image) {
-      const dataUser = userData.providerData[0];
-
-      if (image !== imageURL && name !== dataUser.displayName) {
+    const dataUser = userData.providerData[0];
+    if (name.length && dataUser.displayName.length) {
+      if (name !== dataUser.displayName) {
         setIsNameChanged(true);
-        setIsAvatarChanged(true);
-      } else if (name !== dataUser.displayName) {
-        setIsNameChanged(true);
-      } else if (image !== imageURL) {
-        setIsAvatarChanged(true);
       } else {
         setIsNameChanged(false);
+      }
+    } else if (name.length && !dataUser.displayName.length) {
+      setIsNameChanged(true);
+    } else if (!name.length) {
+      setIsNameChanged(false);
+    }
+  }, [userData, name]);
+
+  useEffect(() => {
+    if (image.length && imageURL?.length) {
+      if (image === imageURL) {
+        setIsAvatarChanged(true);
+      } else {
         setIsAvatarChanged(false);
       }
+    } else if (image.length && !imageURL?.length) {
+      setIsAvatarChanged(true);
+    } else if (!image.length) {
+      setIsAvatarChanged(false);
     }
-  }, [userData, name, image, imageURL]);
+  }, [image, imageURL]);
 
   useEffect(() => {
     if (userData?.providerData?.length) {
       const dataUser = userData.providerData[0];
-      dataUser.displayName.length && setName(dataUser.displayName);
+      dataUser.displayName?.length && setName(dataUser.displayName);
     }
   }, [userData]);
 

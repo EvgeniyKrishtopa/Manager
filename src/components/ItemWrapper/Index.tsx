@@ -11,7 +11,6 @@ import {
   StyledOpenFullCardWrapper,
   StyledOpenFullCardText,
 } from 'components/Styled/Index';
-import { FullArticleView, FullContactView } from 'typings/enums';
 import { getFormattedDate } from 'utils/helpers';
 import { Moment } from 'moment';
 import { IDeleteArticleData } from 'typings/interfaces';
@@ -60,9 +59,7 @@ export default function ItemWrapper({
         <AntDesign name="delete" size={24} color={theme.colors.secondaryBackgroundColor} />
       </StyledIconDeleteWrapper>
       <StyledOpenFullCardWrapper onPress={openFullItemHandler}>
-        <StyledOpenFullCardText>
-          {isFrom === 'article' ? FullArticleView.OpenArticle : FullContactView.OpenContact}
-        </StyledOpenFullCardText>
+        <StyledOpenFullCardText>Open</StyledOpenFullCardText>
       </StyledOpenFullCardWrapper>
     </StyledCard>
   );

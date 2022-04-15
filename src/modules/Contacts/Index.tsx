@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import { FlatList, RefreshControl } from 'react-native';
 import { RootState } from 'redux/store';
@@ -6,16 +6,13 @@ import { useSelector } from 'react-redux';
 import { FetchContactsAction } from 'redux/reducers/contactsUserReducer';
 import { useTheme } from 'styled-components';
 import { StyledTitle, StyledItemsWrapper, StyledNoItemsYet } from 'components/Styled/Index';
-import Loader from 'components/Loader/Index';
 import Contact from './components/Contact/Index';
-
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 import ErrorBoundary from 'utils/ErrorBoundary';
 import { Errors } from 'typings/enums';
 
 function Contacts() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const { userData } = useSelector((state: RootState) => state.users);
   const { contacts, avatars } = useSelector((state: RootState) => state.contacts);
@@ -37,31 +34,15 @@ function Contacts() {
     fetchData();
   };
 
-  useEffect(() => {
-    if (userData) {
-      getDataRequest();
-    }
-  }, [userData, getDataRequest, dispatch]);
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, [contacts]);
-
-  useEffect(() => {
-    setIsLoading(true);
-  }, []);
-
-  if (isLoading && !contacts?.length) {
-    return <Loader />;
-  }
-
   return (
     <ErrorBoundary message={Errors.Error}>
       <StyledItemsWrapper>
         <StyledTitle>Contacts</StyledTitle>
         <FlatList
           data={contacts}
-          renderItem={(item) => <Contact item={item} userId={userData.uid} avatars={avatars} />}
+          renderItem={({ item, index }) => (
+            <Contact item={item} userId={userData.uid} avatars={avatars} index={index} />
+          )}
           keyExtractor={(item) => item?.id}
           progressViewOffset={100}
           initialNumToRender={4}

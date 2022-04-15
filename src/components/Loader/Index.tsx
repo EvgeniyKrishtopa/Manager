@@ -2,7 +2,12 @@ import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components';
 
-export default function Loader() {
+interface IPropsColor {
+  color?: string;
+  size?: any;
+}
+
+export default function Loader({ color, size = 'large' }: IPropsColor) {
   const theme = useTheme();
 
   return (
@@ -12,7 +17,7 @@ export default function Loader() {
         justifyContent: 'center',
       }}
     >
-      <ActivityIndicator size="large" color={theme.colors.mainBackgroundColor} />
+      <ActivityIndicator size={size} color={color ? color : theme.colors.mainBackgroundColor} />
     </View>
   );
 }

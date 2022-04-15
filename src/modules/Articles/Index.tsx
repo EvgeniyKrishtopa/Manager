@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import { FlatList, RefreshControl } from 'react-native';
 import { RootState } from 'redux/store';
@@ -8,13 +8,11 @@ import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
 import { FetchArticlesAction } from 'redux/reducers/articlesUserReducer';
 import { StyledTitle, StyledItemsWrapper, StyledNoItemsYet } from 'components/Styled/Index';
 import Article from './components/Article/Index';
-import Loader from 'components/Loader/Index';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 import ErrorBoundary from 'utils/ErrorBoundary';
 import { Errors } from 'typings/enums';
 
 function Articles() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const { userData } = useSelector((state: RootState) => state.users);
   const { articles } = useSelector((state: RootState) => state.articles);
@@ -36,31 +34,16 @@ function Articles() {
     fetchData();
   };
 
-  useEffect(() => {
-    if (userData) {
-      getDataRequest();
-    }
-  }, [userData, getDataRequest, dispatch]);
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, [articles]);
-
-  useEffect(() => {
-    setIsLoading(true);
-  }, []);
-
-  if (isLoading && !articles?.length) {
-    return <Loader />;
-  }
-
   return (
     <ErrorBoundary message={Errors.Error}>
       <StyledItemsWrapper>
         <StyledTitle>Articles</StyledTitle>
         <FlatList
           data={articles}
-          renderItem={(item) => <Article item={item} userId={userData.uid} />}
+          renderItem={({ item, index }) => (
+            <Article item={item} userId={userData.uid} index={index} />
+          )}
+          //@ts-ignore
           keyExtractor={(item) => item?.created?.toString()}
           progressViewOffset={100}
           initialNumToRender={4}

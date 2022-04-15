@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { useTheme } from 'styled-components';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
@@ -20,7 +20,7 @@ export default function SettingsButton() {
 
   return (
     <StyledSettingsButton onPress={onPressHandler}>
-      <AntDesign name="setting" size={28} color={theme.colors.primary} />
+      <FontAwesome5 name="user" size={28} color={theme.colors.primary} />
     </StyledSettingsButton>
   );
 }

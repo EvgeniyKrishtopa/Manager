@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+
+import Loader from 'components/Loader/Index';
 import { TouchableOpacity } from 'react-native';
 import styled, { useTheme } from 'styled-components/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,10 +8,11 @@ import { getDimensions } from 'utils/helpers';
 import { IContactInfo } from 'typings/interfaces';
 import * as Linking from 'expo-linking';
 
-type ElementProps = {
+interface ElementProps {
+  isLoading?: boolean;
   isFromFullView: boolean;
   width?: number;
-};
+}
 
 const StyledWrapper = styled.View`
   width: 100%;
@@ -22,13 +25,26 @@ const StyledContactInfoWrapper = styled.View<ElementProps>`
   align-items: center;
 `;
 
+const StyledAvatarHolder = styled.View<ElementProps>`
+  border-width: 2px;
+  border-style: solid;
+  border-radius: ${(props) => (props.isFromFullView ? '120px' : '75px')};
+  overflow: hidden;
+  margin-top: 10px;
+  border-color: ${(props) => props.theme.colors.mainTextColor};
+  width: ${(props) => (props.isFromFullView ? '120px' : '75px')};
+  height: ${(props) => (props.isFromFullView ? '120px' : '75px')};
+  align-items: center;
+`;
+
 const StyledAvatar = styled.Image<ElementProps>`
   width: ${(props) => (props.isFromFullView ? '120px' : '75px')};
   height: ${(props) => (props.isFromFullView ? '120px' : '75px')};
+  opacity: ${(props) => (props.isLoading ? '0' : '1')};
+  position: ${(props) => (props.isLoading ? 'absolute' : 'relative')};
+  left: 0;
+  top: 0;
   margin-left: 6px;
-  border-width: 2px;
-  border-radius: ${(props) => (props.isFromFullView ? '120px' : '75px')};
-  border-color: ${(props) => props.theme.colors.mainTextColor};
 `;
 
 const StyledHolder = styled.View<ElementProps>`
@@ -66,6 +82,7 @@ export default function ContactInfo({ item, avatar, isFromFullView }: IContactIn
   const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [computedWidth, setComputedWidth] = useState<number>(0);
+  const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
 
   const theme = useTheme();
 
@@ -100,12 +117,19 @@ export default function ContactInfo({ item, avatar, isFromFullView }: IContactIn
     <StyledWrapper>
       <StyledContactInfoWrapper isFromFullView={isFromFullView}>
         {avatar?.length ? (
-          <StyledAvatar
-            isFromFullView={isFromFullView}
-            source={{
-              uri: avatar,
-            }}
-          />
+          <StyledAvatarHolder isLoading={isImageLoading} isFromFullView={isFromFullView}>
+            <StyledAvatar
+              isLoading={isImageLoading}
+              onLoadEnd={() => setIsImageLoading(false)}
+              isFromFullView={isFromFullView}
+              source={{
+                uri: avatar,
+              }}
+            />
+            {isImageLoading && (
+              <Loader size={isFromFullView ? 'large' : 'small'} color={theme.colors.primary} />
+            )}
+          </StyledAvatarHolder>
         ) : (
           <Ionicons
             name="person-circle-outline"
