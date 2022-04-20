@@ -8,9 +8,10 @@ import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import { BottomTabStackParamList } from 'navigations/Index';
 import View from './components/View/Index';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import ErrorBoundary from 'utils/ErrorBoundary';
 import { IArticleManageData } from 'typings/interfaces';
-import { FullArticleView, Screens, Errors } from 'typings/enums';
+import { Screens, TranslationInfo } from 'typings/enums';
 
 const StyledWrapper = styled.SafeAreaView`
   display: flex;
@@ -57,6 +58,7 @@ function FullViewArticle({ route }: INavProp) {
   const [infoArticle, setInfoArticle] = useState<string>('');
 
   const [navigation] = useNavigationHook(Screens.FullViewArticle);
+  const i18n = useLanguage();
 
   const onEditScreenOpen = () => {
     if (article) {
@@ -81,12 +83,12 @@ function FullViewArticle({ route }: INavProp) {
   }, [route]);
 
   return (
-    <ErrorBoundary message={Errors.Error}>
+    <ErrorBoundary message={i18n.t(TranslationInfo.Error)}>
       <InputScrollView>
         <StyledWrapper>
           <View title={titleArticle} description={descriptionArticle} info={infoArticle} />
           <StyledOpenFullArticleWrapper onPress={onEditScreenOpen}>
-            <StyledOpenFullArticleText>{FullArticleView.EditArticle}</StyledOpenFullArticleText>
+            <StyledOpenFullArticleText>{i18n.t(TranslationInfo.Edit)}</StyledOpenFullArticleText>
           </StyledOpenFullArticleWrapper>
         </StyledWrapper>
       </InputScrollView>

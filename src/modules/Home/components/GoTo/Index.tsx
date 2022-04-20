@@ -2,7 +2,8 @@ import React from 'react';
 
 import styled from 'styled-components/native';
 import { StyledButtonPrimary, StyledButtonTextPrimary } from 'components/Styled/Index';
-
+import { useLanguage } from 'utils/Hooks/useLanguage';
+import { TranslationInfo } from 'typings/enums';
 interface IGoTo {
   onNavigateHandler: () => void;
 }
@@ -13,10 +14,12 @@ const StyledButtonWrapper = styled.View`
 `;
 
 export default function GoTo({ onNavigateHandler }: IGoTo) {
+  const i18n = useLanguage();
+
   return (
     <StyledButtonWrapper>
       <StyledButtonPrimary onPress={onNavigateHandler}>
-        <StyledButtonTextPrimary>Create a new Article/Contact</StyledButtonTextPrimary>
+        <StyledButtonTextPrimary>{i18n.t(TranslationInfo.Create)}</StyledButtonTextPrimary>
       </StyledButtonPrimary>
     </StyledButtonWrapper>
   );

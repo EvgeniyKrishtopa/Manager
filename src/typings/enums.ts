@@ -14,11 +14,65 @@ export enum Screens {
   EditContact = 'EditContact',
 }
 
-export enum AuthInfo {
-  SignIn = 'Sign In',
-  SignUp = 'Sign Up',
-  GoBack = 'Go Back',
-  VisitFirst = 'Dont have an account? Create here!',
+export enum TranslationInfo {
+  SignIn = 'SignIn',
+  SignUp = 'SignUp',
+  GoBack = 'GoBack',
+  VisitFirst = 'VisitFirst',
+  AccountSettings = 'AccountSettings',
+  Contacts = 'Contacts',
+  Contact = 'Contact',
+  Articles = 'Articles',
+  Article = 'Article',
+  Add = 'Add',
+  Home = 'Home',
+  AddNew = 'AddNew',
+  NoContacts = 'NoContacts',
+  NoArticles = 'NoArticles',
+  Welcome = 'Welcome',
+  HomeDescription = 'HomeDescription',
+  Create = 'Create',
+  HomeDescriptionWithItems = 'HomeDescriptionWithItems',
+  Here = 'Here',
+  OpenCamera = 'OpenCamera',
+  SelectImages = 'SelectImages',
+  SelectLanguage = 'SelectLanguage',
+  UserName = 'UserName',
+  Settings = 'Settings',
+  Open = 'Open',
+  Edit = 'Edit',
+  Submit = 'Submit',
+  Recent = 'Recent',
+  Birthday = 'Birthday',
+  WebSite = 'WebSite',
+  PickDate = 'PickDate',
+  AddLocation = 'AddLocation',
+  Email = 'Email',
+  Password = 'Password',
+  Title = 'Title',
+  Description = 'Description',
+  Info = 'Info',
+  FirstName = 'FirstName',
+  LastName = 'LastName',
+  Occupation = 'Occupation',
+  PhoneNumber = 'PhoneNumber',
+  Website = 'Website',
+  Required = 'Required',
+  InvalidEmail = 'InvalidEmail',
+  InvalidSite = 'InvalidSite',
+  InvalidPhone = 'InvalidPhone',
+  Error = 'Error',
+  ErrorOccurs = 'ErrorOccurs',
+  ErrorNotification = 'ErrorNotification',
+  Success = 'Success',
+  SettingsAction = 'SettingsAction',
+  AddNewArticleAction = 'AddNewArticleAction',
+  EditArticleAction = 'EditArticleAction',
+  RemoveArticleAction = 'RemoveArticleAction',
+  AddNewContactAction = 'AddNewContactAction',
+  EditContactAction = 'EditContactAction',
+  RemoveContactAction = 'RemoveContactAction',
+  ErrorAuthNotification = 'ErrorAuthNotification',
 }
 
 export enum SettingsLabels {
@@ -26,13 +80,6 @@ export enum SettingsLabels {
   PhoneNumber = 'Phone Number',
   BirthDay = 'Data of Birthday',
   WebSite = 'Web Site',
-}
-
-export enum AvatarUpload {
-  ChangePhoto = 'Change Photo',
-  UploadAvatar = 'Upload Avatar',
-  Select = 'Select an image',
-  OpenCamera = 'Open camera',
 }
 
 export enum ManageActivities {
@@ -45,34 +92,9 @@ export enum UserActivities {
   Update = 'Update',
 }
 
-export enum AlertsInfo {
-  Error = 'Error!',
-  Success = 'Success!',
-  SettingsAction = 'Settings were changed!',
-  AddNewArticleAction = 'Article was successfully created!',
-  EditArticleAction = 'Article was changed!',
-  RemoveArticleAction = 'Article was deleted!',
-  AddNewContactAction = 'Contact was successfully created!',
-  EditContactAction = 'Contact was changed!',
-  RemoveContactAction = 'Contact was deleted!',
-  ErrorAuthNotification = 'Wrong email or password!',
-}
-
 export enum AddScreenTexts {
   First = 'first',
   Second = 'second',
-  TitleTabFirst = 'Article',
-  TitleTabSecond = 'Contact',
-}
-
-export enum FullArticleView {
-  OpenArticle = 'Open Article',
-  EditArticle = 'Edit Article',
-}
-
-export enum FullContactView {
-  OpenContact = 'Open Contact',
-  EditContact = 'Edit Contact',
 }
 
 export enum FieldsContact {
@@ -87,19 +109,6 @@ export enum FieldsContact {
   website = 'Website',
   invalidEmail = 'Invalid Email',
   invalidSite = 'Enter correct url!',
-}
-
-export enum FormSubmit {
-  Submit = 'Submit',
-}
-
-export enum DataPickerButtonText {
-  Pick = 'Pick a date',
-  Hide = 'Hide',
-}
-
-export enum Errors {
-  Error = "Some Error Occurs! It'll be fix soon.Thanks!",
 }
 
 export enum Fields {

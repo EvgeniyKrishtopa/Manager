@@ -177,6 +177,7 @@ export const EditContactAction = createAsyncThunk(
           return getAll({ id: userId });
         });
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error);
     }
   },

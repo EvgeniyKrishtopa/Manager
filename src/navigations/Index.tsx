@@ -24,8 +24,9 @@ import Logo from 'components/Logo/Index';
 import HeaderRight from 'components/HeaderRight/Index';
 import { withNotification } from 'utils/Hocs/withNotification';
 import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { IsIOS } from 'utils/helpers';
-import { Screens } from 'typings/enums';
+import { TranslationInfo, Screens } from 'typings/enums';
 
 export type BottomTabStackParamList = {
   Main: undefined;
@@ -92,14 +93,17 @@ const AuthNavigationStack = () => (
 
 const MainNavigatorStack = () => {
   const { isLoginnedUser, userData } = useSelector((state: RootState) => state.users);
+
   const { orientation } = useGetOrientation();
   const theme = useTheme();
+  const i18n = useLanguage();
 
   const height = IsIOS && orientation === 'Landscape' ? 60 : 110;
 
   const optionsSettingsConfig = {
     headerBackVisible: true,
     headerBackTitleVisible: false,
+    title: i18n.t(TranslationInfo.Settings),
     headerStyle: { backgroundColor: theme.colors.mainBackgroundColor, height },
     headerTintColor: theme.colors.primary,
     cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,

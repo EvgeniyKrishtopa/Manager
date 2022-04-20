@@ -1,5 +1,6 @@
 import { FormikErrors } from 'formik';
 import { Dispatch, SetStateAction } from 'react';
+import { Moment } from 'moment';
 import { ArticleEditType } from 'modules/FullViewContact/Index';
 export interface IUserState {
   userData: any | null;
@@ -8,6 +9,7 @@ export interface IUserState {
   imageURL: undefined | string;
   typeUserAction: string;
   orientation: string;
+  language: string;
 }
 export interface IArticle {
   title: string;
@@ -29,6 +31,7 @@ export interface IUserUploadAvatar {
 export interface IUserUpdationData {
   saveDataHandler: () => void;
   isNameChanged: boolean;
+  isLanguageChanged: boolean;
   isAvatarChanged: boolean;
 }
 export interface IContactDataCreate {
@@ -88,7 +91,7 @@ export interface ICreateContactData {
   email: string;
   occupation: string;
   phoneNumber: string;
-  birthDay: string;
+  birthDay: string | Moment;
   location: ILocation | null;
   id: string;
   webSite: string;
@@ -106,6 +109,7 @@ export interface ICustomInputProp {
   fieldName: string;
   error: string | string[] | FormikErrors<any> | FormikErrors<any>[] | undefined;
   value: string;
+  placeholder: string;
   touched?: boolean;
   handleChange: any;
   handleBlur: any;
@@ -131,10 +135,11 @@ export interface ICustomInputProp {
     | 'web-search';
 }
 export interface IDateInputProp {
-  dateNumberHandler: (value: string) => void;
+  dateNumberHandler: (value: any) => void;
+  setBirthDayFormatted: (value: string) => void;
   onBlurHandler: () => void;
+  birthDayFormatted: string;
   isFieldBlurredWithoutValue: boolean;
-  dateValue: string;
   placeholder: string;
   color: string;
 }

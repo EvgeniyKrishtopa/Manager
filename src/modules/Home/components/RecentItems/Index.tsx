@@ -3,8 +3,9 @@ import React from 'react';
 import styled from 'styled-components/native';
 import Article from 'modules/Articles/components/Article/Index';
 import Contact from 'modules/Contacts/components/Contact/Index';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { IArticleManageData, IAvatarConfig, ICreateContactData } from 'typings/interfaces';
-
+import { TranslationInfo } from 'typings/enums';
 interface IRecentItems {
   recentArticle: IArticleManageData | null;
   recentContact: ICreateContactData | null;
@@ -34,9 +35,11 @@ export default function RecentItems({
   userData,
   avatars,
 }: IRecentItems) {
+  const i18n = useLanguage();
+
   return (
     <StyledWrapper>
-      <StyledNewItems>Recent Articles/Contacts:</StyledNewItems>
+      <StyledNewItems>{i18n.t(TranslationInfo.Recent)}</StyledNewItems>
       <StyledScrollView>
         {recentArticle && <Article item={recentArticle} userId={userData.uid} />}
         {recentContact && <Contact item={recentContact} userId={userData.uid} avatars={avatars} />}

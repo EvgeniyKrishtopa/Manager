@@ -6,23 +6,25 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { BottomTabStackParamList } from 'navigations/Index';
 import * as Linking from 'expo-linking';
 import ContactInfo from 'components/ContactInfo/Index';
 import { OrientationProps } from 'components/Styled/Index';
 import Map from 'components/Map/Map';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 import ErrorBoundary from 'utils/ErrorBoundary';
-import { BottomTabStackParamList } from 'navigations/Index';
+import { getFormattedDate } from 'utils/helpers';
 import {
   IArticleManageData,
   IAvatarConfig,
   ICreateContactData,
   ILocation,
 } from 'typings/interfaces';
-import { FullContactView, Screens, Errors } from 'typings/enums';
+import { Screens, TranslationInfo } from 'typings/enums';
 
 const StyledWrapper = styled.View`
   display: flex;
@@ -106,10 +108,12 @@ function FullViewContact({ route }: INavProp) {
   const [websiteContact, setWebsiteContact] = useState<string>('');
   const [locationContact, setLocationContact] = useState<ILocation | null>(null);
 
-  const [navigation] = useNavigationHook(Screens.FullViewContact);
-
   const { avatars } = useSelector((state: RootState) => state.contacts);
+  const { language } = useSelector((state: RootState) => state.users);
+
+  const [navigation] = useNavigationHook(Screens.FullViewContact);
   const { orientation } = useGetOrientation();
+  const i18n = useLanguage();
 
   const onEditScreenOpen = () => {
     if (contact) {
@@ -142,7 +146,7 @@ function FullViewContact({ route }: INavProp) {
   }, [route, avatars]);
 
   return (
-    <ErrorBoundary message={Errors.Error}>
+    <ErrorBoundary message={i18n.t(TranslationInfo.Error)}>
       <TouchableDismissWrappper>
         <ScrollView>
           <StyledWrapper>
@@ -152,11 +156,14 @@ function FullViewContact({ route }: INavProp) {
               ) : null}
               <StyledBirthdaySiteContainer orientation={orientation}>
                 {birthayContact.length ? (
-                  <StyledBirthday>{`Birthday: ${birthayContact}`}</StyledBirthday>
+                  <StyledBirthday>{`${i18n.t(TranslationInfo.Birthday)}: ${getFormattedDate(
+                    birthayContact,
+                    language,
+                  )}`}</StyledBirthday>
                 ) : null}
                 {websiteContact.length ? (
                   <StyledWebsiteWrapper>
-                    <StyledWebsiteText>Website: </StyledWebsiteText>
+                    <StyledWebsiteText>{i18n.t(TranslationInfo.WebSite)}</StyledWebsiteText>
                     <TouchableOpacity onPress={onPressWebSiteLink}>
                       <StyledWebsiteLink>{websiteContact}</StyledWebsiteLink>
                     </TouchableOpacity>
@@ -170,7 +177,7 @@ function FullViewContact({ route }: INavProp) {
               </View>
             ) : null}
             <StyledOpenFullArticleWrapper onPress={onEditScreenOpen}>
-              <StyledOpenFullArticleText>{FullContactView.EditContact}</StyledOpenFullArticleText>
+              <StyledOpenFullArticleText>{i18n.t(TranslationInfo.Edit)}</StyledOpenFullArticleText>
             </StyledOpenFullArticleWrapper>
           </StyledWrapper>
         </ScrollView>

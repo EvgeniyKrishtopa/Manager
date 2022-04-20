@@ -10,9 +10,10 @@ import Avatar from 'components/Avatar/Index';
 import MapView from 'components/Map/Index';
 import { OrientationProps } from 'components/Styled/Index';
 import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { IValuesData } from './FormContact';
 import { ILocationProps } from 'typings/interfaces';
-import { FieldsContact } from 'typings/enums';
+import { FieldsContact, TranslationInfo } from 'typings/enums';
 
 const StyledInputGroupWrapper = styled.View`
   align-items: center;
@@ -32,9 +33,10 @@ interface IFieldsListProps extends ILocationProps {
   phoneNumber: string;
   isPhoneBlurredWithoutValue: boolean;
   isDateBlurredWithoutValue: boolean;
-  birthDay: string;
   avatarLink: string;
-  dateNumberHandler: (value: string) => void;
+  birthDayFormatted: string;
+  setBirthDayFormatted: (value: string) => void;
+  dateNumberHandler: (value: any) => void;
   onBlurDateHandler: () => void;
   setAvatarLink: Dispatch<SetStateAction<string>>;
   phoneNumberHandler: (value: string) => void;
@@ -43,6 +45,7 @@ interface IFieldsListProps extends ILocationProps {
 
 export default function FieldsList(props: IFieldsListProps) {
   const { orientation } = useGetOrientation();
+  const i18n = useLanguage();
 
   const InputScrollStyles =
     orientation === 'Landscape' ? { paddingLeft: 100, paddingRight: 100 } : null;
@@ -60,9 +63,10 @@ export default function FieldsList(props: IFieldsListProps) {
     phoneNumber,
     isPhoneBlurredWithoutValue,
     isDateBlurredWithoutValue,
-    birthDay,
     avatarLink,
     location,
+    birthDayFormatted,
+    setBirthDayFormatted,
     setAvatarLink,
     dateNumberHandler,
     onBlurDateHandler,
@@ -76,6 +80,7 @@ export default function FieldsList(props: IFieldsListProps) {
           <StyledInputGroupWrapper style={InputScrollStyles}>
             <CustomInput
               fieldName={FieldsContact.firstName}
+              placeholder={i18n.t(TranslationInfo.FirstName)}
               value={values['First Name']}
               error={errors['First Name']}
               touched={touched['First Name']}
@@ -85,6 +90,7 @@ export default function FieldsList(props: IFieldsListProps) {
             />
             <CustomInput
               fieldName={FieldsContact.lastName}
+              placeholder={i18n.t(TranslationInfo.LastName)}
               value={values['Last Name']}
               error={errors['Last Name']}
               touched={touched['Last Name']}
@@ -94,6 +100,7 @@ export default function FieldsList(props: IFieldsListProps) {
             />
             <CustomInput
               fieldName={FieldsContact.occupation}
+              placeholder={i18n.t(TranslationInfo.Occupation)}
               value={values['Occupation']}
               error={errors['Occupation']}
               handleChange={handleChange}
@@ -111,11 +118,12 @@ export default function FieldsList(props: IFieldsListProps) {
               color={theme.colors.secondaryTextColor}
               isValidPhone={isValidPhone}
               phoneNumber={phoneNumber}
-              placeholder={FieldsContact.phoneNumber}
+              placeholder={i18n.t(TranslationInfo.PhoneNumber)}
               isPhoneBlurredWithoutValue={isPhoneBlurredWithoutValue}
             />
             <CustomInput
               fieldName={FieldsContact.email}
+              placeholder={i18n.t(TranslationInfo.Email)}
               value={values['Email']}
               error={errors['Email']}
               touched={touched['Email']}
@@ -126,6 +134,7 @@ export default function FieldsList(props: IFieldsListProps) {
             />
             <CustomInput
               fieldName={FieldsContact.website}
+              placeholder={i18n.t(TranslationInfo.WebSite)}
               value={values['Website']}
               error={errors['Website']}
               handleChange={handleChange}
@@ -142,9 +151,10 @@ export default function FieldsList(props: IFieldsListProps) {
             <DateInput
               dateNumberHandler={dateNumberHandler}
               onBlurHandler={onBlurDateHandler}
+              birthDayFormatted={birthDayFormatted}
+              setBirthDayFormatted={setBirthDayFormatted}
               isFieldBlurredWithoutValue={isDateBlurredWithoutValue}
-              dateValue={birthDay}
-              placeholder={FieldsContact.dateOfBirth}
+              placeholder={i18n.t(TranslationInfo.Birthday)}
               color={theme.colors.secondaryTextColor}
             />
           </StyledInputGroupWrapper>

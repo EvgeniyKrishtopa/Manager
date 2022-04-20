@@ -5,7 +5,9 @@ import styled from 'styled-components/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Map from './Map';
 import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { ILocationProps } from 'typings/interfaces';
+import { TranslationInfo } from 'typings/enums';
 export interface IAddress {
   country: string | null;
   city: string | null;
@@ -24,6 +26,7 @@ export default function MapView({ location, setLocation }: ILocationProps) {
   const { orientation } = useGetOrientation();
 
   const theme = useTheme();
+  const i18n = useLanguage();
 
   const textStyle = { color: theme.colors.primary, fontSize: 20, textDecorationLine: 'none' };
 
@@ -39,7 +42,7 @@ export default function MapView({ location, setLocation }: ILocationProps) {
         isChecked={location && true}
         fillColor={theme.colors.primary}
         unfillColor={theme.colors.secondaryTextColor}
-        text="Add the Location"
+        text={i18n.t(TranslationInfo.AddLocation)}
         iconStyle={{ color: theme.colors.mainBackgroundColor, borderRadius: 0 }}
         //@ts-ignore
         textStyle={textStyle}

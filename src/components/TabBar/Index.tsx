@@ -4,8 +4,9 @@ import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs/src/types';
-import { Screens } from 'typings/enums';
+import { Screens, TranslationInfo } from 'typings/enums';
 import { useTheme } from 'styled-components';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 
 const StyledView = styled.View`
   flex-direction: row;
@@ -33,6 +34,7 @@ const StyledText = styled.Text<{ focused: boolean }>`
 
 export default function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const theme = useTheme();
+  const i18n = useLanguage();
 
   const renderTab = (screen: string, focused: boolean) => {
     const iconColor = focused ? theme.colors.primary : theme.colors.mainTextColor;
@@ -42,28 +44,28 @@ export default function TabBar({ state, descriptors, navigation }: BottomTabBarP
         return (
           <StyledTabHolder>
             <Ionicons name="md-home" size={26} color={iconColor} />
-            <StyledText focused={focused}>{Screens.Home}</StyledText>
+            <StyledText focused={focused}>{i18n.t(TranslationInfo.Home)}</StyledText>
           </StyledTabHolder>
         );
       case Screens.Contacts:
         return (
           <StyledTabHolder>
             <Ionicons name="list" size={26} color={iconColor} />
-            <StyledText focused={focused}>{Screens.Contacts}</StyledText>
+            <StyledText focused={focused}>{i18n.t(TranslationInfo.Contacts)}</StyledText>
           </StyledTabHolder>
         );
       case Screens.Articles:
         return (
           <StyledTabHolder>
             <Ionicons name="md-newspaper" size={26} color={iconColor} />
-            <StyledText focused={focused}>{Screens.Articles}</StyledText>
+            <StyledText focused={focused}>{i18n.t(TranslationInfo.Articles)}</StyledText>
           </StyledTabHolder>
         );
       case Screens.Add:
         return (
           <StyledTabHolder>
             <Ionicons name="add-circle-outline" size={26} color={iconColor} />
-            <StyledText focused={focused}>{Screens.Add}</StyledText>
+            <StyledText focused={focused}>{i18n.t(TranslationInfo.Add)}</StyledText>
           </StyledTabHolder>
         );
     }

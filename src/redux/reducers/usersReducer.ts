@@ -19,6 +19,7 @@ const initialState: IUserState = {
   imageURL: undefined,
   typeUserAction: '',
   orientation: 'PORTRAIT_UP',
+  language: 'en',
 };
 
 export const SignInAction = createAsyncThunk(
@@ -138,6 +139,16 @@ export const usersSlice = createSlice({
     clearAvatarUser: (state) => {
       state.imageURL = undefined;
     },
+    setLanguage: (state, action) => {
+      state.language = action.payload.language;
+
+      if (action.payload.isOnlyLangUpdated) {
+        state.typeUserAction = UserActivities.Update;
+      }
+    },
+    clearLanguage: (state) => {
+      state.language = 'en';
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(SignInAction.fulfilled, (state, action) => {
@@ -145,7 +156,6 @@ export const usersSlice = createSlice({
       state.isLoginnedUser = true;
       state.typeUserAction = '';
       state.error = '';
-
       if (!state.imageURL) {
         state.imageURL = action.payload?.avatarUrl;
       }
@@ -199,7 +209,13 @@ export const usersSlice = createSlice({
   },
 });
 
-export const { clearErrorUser, clearTypeUser, changeOrientation, clearAvatarUser } =
-  usersSlice.actions;
+export const {
+  clearErrorUser,
+  clearTypeUser,
+  changeOrientation,
+  clearAvatarUser,
+  setLanguage,
+  clearLanguage,
+} = usersSlice.actions;
 
 export default usersSlice.reducer;

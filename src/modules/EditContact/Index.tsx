@@ -17,9 +17,10 @@ import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 import ErrorBoundary from 'utils/ErrorBoundary';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { uidCleaner } from 'utils/helpers';
 import { IContactDataEdit, ICreateContactData } from 'typings/interfaces';
-import { Screens, Errors } from 'typings/enums';
+import { Screens, TranslationInfo } from 'typings/enums';
 
 const StyledWrapper = styled.View`
   display: flex;
@@ -48,7 +49,7 @@ function EditContact({ route }: INavProp) {
   const [dispatch] = useDispatchHook();
 
   const { contacts, isLoadingContact } = useSelector((state: RootState) => state.contacts);
-
+  const i18n = useLanguage();
   const id = userData.uid;
 
   const formContactEditSubmit = ({ dataEdit, avatarLink }: IContactDataEdit) => {
@@ -99,7 +100,7 @@ function EditContact({ route }: INavProp) {
   }
 
   return (
-    <ErrorBoundary message={Errors.Error}>
+    <ErrorBoundary message={i18n.t(TranslationInfo.Error)}>
       <TouchableDismissWrappper>
         <StyledWrapper>
           {!isForSubmitting ? (

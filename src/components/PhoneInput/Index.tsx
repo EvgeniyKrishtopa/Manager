@@ -1,7 +1,9 @@
 import React from 'react';
 
 import { StyledInput, TextError } from 'components/Styled/Index';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { IPhoneInputProp } from 'typings/interfaces';
+import { TranslationInfo } from 'typings/enums';
 
 export default function PhoneInput({
   phoneNumberHandler,
@@ -12,6 +14,8 @@ export default function PhoneInput({
   placeholder,
   color,
 }: IPhoneInputProp) {
+  const i18n = useLanguage();
+
   return (
     <>
       <StyledInput
@@ -23,9 +27,11 @@ export default function PhoneInput({
         keyboardType="phone-pad"
       />
       {!isValidPhone && phoneNumber.length > 6 ? (
-        <TextError>Phone Number is not Valid!</TextError>
+        <TextError>{i18n.t(TranslationInfo.InvalidPhone)}</TextError>
       ) : null}
-      {isPhoneBlurredWithoutValue ? <TextError>Required!</TextError> : null}
+      {isPhoneBlurredWithoutValue ? (
+        <TextError>{i18n.t(TranslationInfo.Required)}</TextError>
+      ) : null}
     </>
   );
 }

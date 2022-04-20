@@ -19,7 +19,20 @@ export const getPictureBlob = (uri: string) => {
   });
 };
 
-export const getFormattedDate = (date: Moment) => {
+export const getFormattedDate = (date: Moment | string, language: string) => {
+  if (language === 'ru') {
+    //@ts-ignore
+    import('moment/locale/ru').then(() => {
+      moment.locale('ru');
+    });
+  }
+  if (language === 'en') {
+    //@ts-ignore
+    import('moment/locale/en-au').then(() => {
+      moment.locale('en');
+    });
+  }
+
   return moment(date).format('MMMM Do YYYY');
 };
 

@@ -9,8 +9,9 @@ import { FetchArticlesAction } from 'redux/reducers/articlesUserReducer';
 import { StyledTitle, StyledItemsWrapper, StyledNoItemsYet } from 'components/Styled/Index';
 import Article from './components/Article/Index';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import ErrorBoundary from 'utils/ErrorBoundary';
-import { Errors } from 'typings/enums';
+import { TranslationInfo } from 'typings/enums';
 
 function Articles() {
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -19,6 +20,7 @@ function Articles() {
 
   const [dispatch] = useDispatchHook();
   const theme = useTheme();
+  const i18n = useLanguage();
 
   const getDataRequest = useCallback(() => {
     dispatch(FetchArticlesAction({ id: userData.uid }));
@@ -35,9 +37,9 @@ function Articles() {
   };
 
   return (
-    <ErrorBoundary message={Errors.Error}>
+    <ErrorBoundary message={i18n.t(TranslationInfo.Error)}>
       <StyledItemsWrapper>
-        <StyledTitle>Articles</StyledTitle>
+        <StyledTitle>{i18n.t(TranslationInfo.Articles)}</StyledTitle>
         <FlatList
           data={articles}
           renderItem={({ item, index }) => (
@@ -54,7 +56,9 @@ function Articles() {
               onRefresh={refreshFetchData}
             />
           }
-          ListEmptyComponent={<StyledNoItemsYet>No Articles Yet!</StyledNoItemsYet>}
+          ListEmptyComponent={
+            <StyledNoItemsYet>{i18n.t(TranslationInfo.NoArticles)}</StyledNoItemsYet>
+          }
         />
       </StyledItemsWrapper>
     </ErrorBoundary>

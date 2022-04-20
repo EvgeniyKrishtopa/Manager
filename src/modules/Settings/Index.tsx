@@ -3,15 +3,18 @@ import React, { useEffect, useState, useLayoutEffect, useCallback } from 'react'
 import { RootState } from 'redux/store';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
+import { UpdateUserAction, UploadUserImageAction, setLanguage } from 'redux/reducers/usersReducer';
 import SaveButton from './components/Save/Index';
 import Field from './components/Field/Index';
 import Avatar from 'components/Avatar/Index';
+import PickerLanguage from './components/Picker/Index';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
 import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 import ErrorBoundary from 'utils/ErrorBoundary';
-import { SettingsLabels, Errors } from 'typings/enums';
-import { UpdateUserAction, UploadUserImageAction } from 'redux/reducers/usersReducer';
+import { TranslationInfo } from 'typings/enums';
+
 interface IContentWrapper {
   orientation: string;
   isFocused: boolean;
@@ -45,15 +48,16 @@ const StyledTitle = styled.Text`
 function Settings({ navigation }: any) {
   const [name, setName] = useState<string>('');
   const [image, setImage] = useState<string>('');
+  const [lang, setLang] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [isNameChanged, setIsNameChanged] = useState<boolean>(false);
   const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
-
-  const { userData, imageURL } = useSelector((state: RootState) => state.users);
+  const [isLanguageChanged, setIsLanguageChanged] = useState<boolean>(false);
+  const { userData, imageURL, language } = useSelector((state: RootState) => state.users);
 
   const [dispatch] = useDispatchHook();
-
   const { orientation } = useGetOrientation();
+  const i18n = useLanguage();
 
   const onBlurHandler = () => {
     setTimeout(() => {
@@ -74,17 +78,23 @@ function Settings({ navigation }: any) {
   }, [imageURL, image]);
 
   const saveDataHandler = useCallback(() => {
-    if (isNameChanged && isAvatarChanged) {
+    if (isNameChanged && isAvatarChanged && isLanguageChanged) {
       dispatch(UploadUserImageAction({ id: userData.uid, userAvatar: image }));
       dispatch(UpdateUserAction({ userName: name }));
       setIsNameChanged(false);
       setIsAvatarChanged(false);
-
+      dispatch(setLanguage({ language: lang, isOnlyLangUpdated: false }));
+      setIsLanguageChanged(false);
       return;
     }
     if (isNameChanged) {
       dispatch(UpdateUserAction({ userName: name }));
       setIsNameChanged(false);
+    }
+
+    if (isLanguageChanged) {
+      dispatch(setLanguage({ language: lang, isOnlyLangUpdated: true }));
+      setIsLanguageChanged(false);
     }
     if (isAvatarChanged) {
       dispatch(
@@ -92,7 +102,16 @@ function Settings({ navigation }: any) {
       );
       setIsAvatarChanged(false);
     }
-  }, [dispatch, image, isAvatarChanged, isNameChanged, name, userData.uid]);
+  }, [
+    dispatch,
+    image,
+    isAvatarChanged,
+    isNameChanged,
+    lang,
+    name,
+    isLanguageChanged,
+    userData.uid,
+  ]);
 
   useEffect(() => {
     const dataUser = userData.providerData[0];
@@ -111,7 +130,7 @@ function Settings({ navigation }: any) {
 
   useEffect(() => {
     if (image.length && imageURL?.length) {
-      if (image === imageURL) {
+      if (image !== imageURL) {
         setIsAvatarChanged(true);
       } else {
         setIsAvatarChanged(false);
@@ -130,38 +149,52 @@ function Settings({ navigation }: any) {
     }
   }, [userData]);
 
+  useEffect(() => {
+    if (lang !== language) {
+      setIsLanguageChanged(true);
+    } else {
+      setIsLanguageChanged(false);
+    }
+  }, [lang, language]);
+
+  useEffect(() => {
+    setLang(language);
+  }, [language]);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <SaveButton
           isNameChanged={isNameChanged}
           isAvatarChanged={isAvatarChanged}
+          isLanguageChanged={isLanguageChanged}
           saveDataHandler={saveDataHandler}
         />
       ),
     });
-  }, [navigation, isNameChanged, isAvatarChanged, saveDataHandler]);
+  }, [navigation, isNameChanged, isAvatarChanged, isLanguageChanged, saveDataHandler]);
 
   useEffect(() => {
     return () => {
       setIsNameChanged(false);
       setIsAvatarChanged(false);
+      setIsLanguageChanged(false);
     };
   }, []);
 
   return (
-    <ErrorBoundary message={Errors.Error}>
+    <ErrorBoundary message={i18n.t(TranslationInfo.Error)}>
       <TouchableDismissWrappper>
         <StyledContainer>
           <StyledScrollView>
             <StyledContainer>
               <StyledContentWrapper orientation={orientation} isFocused={isFocused}>
-                <StyledTitle>Account Settings</StyledTitle>
+                <StyledTitle>{i18n.t(TranslationInfo.AccountSettings)}</StyledTitle>
                 <Avatar value={image} setValue={setImage} />
               </StyledContentWrapper>
-
+              <PickerLanguage value={lang} setValue={setLang} />
               <Field
-                type={SettingsLabels.UserName}
+                type={i18n.t(TranslationInfo.UserName)}
                 value={name}
                 setValue={setName}
                 onBlurHandler={onBlurHandler}

@@ -8,9 +8,10 @@ import { useTheme } from 'styled-components';
 import { StyledTitle, StyledItemsWrapper, StyledNoItemsYet } from 'components/Styled/Index';
 import Contact from './components/Contact/Index';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 import ErrorBoundary from 'utils/ErrorBoundary';
-import { Errors } from 'typings/enums';
+import { TranslationInfo } from 'typings/enums';
 
 function Contacts() {
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -19,6 +20,7 @@ function Contacts() {
 
   const [dispatch] = useDispatchHook();
   const theme = useTheme();
+  const i18n = useLanguage();
 
   const getDataRequest = useCallback(() => {
     dispatch(FetchContactsAction({ id: userData.uid }));
@@ -35,9 +37,9 @@ function Contacts() {
   };
 
   return (
-    <ErrorBoundary message={Errors.Error}>
+    <ErrorBoundary message={i18n.t(TranslationInfo.Error)}>
       <StyledItemsWrapper>
-        <StyledTitle>Contacts</StyledTitle>
+        <StyledTitle>{i18n.t(TranslationInfo.Contacts)}</StyledTitle>
         <FlatList
           data={contacts}
           renderItem={({ item, index }) => (
@@ -53,7 +55,9 @@ function Contacts() {
               onRefresh={refreshFetchData}
             />
           }
-          ListEmptyComponent={<StyledNoItemsYet>No Contacts Yet!</StyledNoItemsYet>}
+          ListEmptyComponent={
+            <StyledNoItemsYet>{i18n.t(TranslationInfo.NoContacts)}</StyledNoItemsYet>
+          }
         />
       </StyledItemsWrapper>
     </ErrorBoundary>

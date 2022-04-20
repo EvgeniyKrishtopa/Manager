@@ -1,7 +1,8 @@
 import React from 'react';
 
 import styled from 'styled-components/native';
-import { AlertsInfo } from 'typings/enums';
+import { useLanguage } from 'utils/Hooks/useLanguage';
+import { TranslationInfo } from 'typings/enums';
 
 const StyledWrapperSuccess = styled.View`
   width: 90%;
@@ -34,11 +35,13 @@ interface IPropsMessageNotification {
 }
 
 export default function SuccessNotification({ message }: IPropsMessageNotification) {
+  const i18n = useLanguage();
+
   return (
     <StyledWrapperSuccess>
-      <StyledTextTitleSuccess>{AlertsInfo.Success}</StyledTextTitleSuccess>
+      <StyledTextTitleSuccess>{i18n.t(TranslationInfo.Success)}</StyledTextTitleSuccess>
       <StyledTextDescriptionSuccess>
-        {message ? message : 'Settings were updated!'}
+        {message ? message : i18n.t(TranslationInfo.SettingsAction)}
       </StyledTextDescriptionSuccess>
     </StyledWrapperSuccess>
   );

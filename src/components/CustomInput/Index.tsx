@@ -14,6 +14,7 @@ export default function CustomInput({
   handleChange,
   handleBlur,
   maxLength,
+  placeholder,
   multiline = false,
   secureTextEntry = false,
   isValidateWithoutTouched = false,
@@ -27,10 +28,11 @@ export default function CustomInput({
         onChangeText={handleChange(fieldName)}
         onBlur={handleBlur(fieldName)}
         value={value}
+        placeholder={placeholder}
         multiline={multiline}
         maxLength={maxLength}
         heightInput={heightInput}
-        placeholder={fieldName}
+        // placeholder={fieldName}
         secureTextEntry={secureTextEntry}
         placeholderTextColor={theme.colors.secondaryTextColor}
         keyboardType={keyboard}

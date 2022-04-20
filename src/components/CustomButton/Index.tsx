@@ -5,7 +5,8 @@ import {
   StyledButtonTextPrimary,
   StyledButtonPrimaryDisabled,
 } from 'components/Styled/Index';
-import { FormSubmit } from 'typings/enums';
+import { useLanguage } from 'utils/Hooks/useLanguage';
+import { TranslationInfo } from 'typings/enums';
 
 interface IButtonSubmitProps {
   handleSubmit: () => void;
@@ -13,7 +14,12 @@ interface IButtonSubmitProps {
   isValidPhone?: boolean;
 }
 
-export default function CustomButton({ handleSubmit, isDisabled = false }: IButtonSubmitProps) {
+export default function CustomButtonSubmit({
+  handleSubmit,
+  isDisabled = false,
+}: IButtonSubmitProps) {
+  const i18n = useLanguage();
+
   const onSubmitHandler = () => {
     !isDisabled && handleSubmit();
   };
@@ -21,14 +27,14 @@ export default function CustomButton({ handleSubmit, isDisabled = false }: IButt
   if (isDisabled) {
     return (
       <StyledButtonPrimaryDisabled>
-        <StyledButtonTextPrimary>{FormSubmit.Submit}</StyledButtonTextPrimary>
+        <StyledButtonTextPrimary>{i18n.t(TranslationInfo.Submit)}</StyledButtonTextPrimary>
       </StyledButtonPrimaryDisabled>
     );
   }
 
   return (
     <StyledButtonPrimary onPress={onSubmitHandler}>
-      <StyledButtonTextPrimary>{FormSubmit.Submit}</StyledButtonTextPrimary>
+      <StyledButtonTextPrimary>{i18n.t(TranslationInfo.Submit)}</StyledButtonTextPrimary>
     </StyledButtonPrimary>
   );
 }

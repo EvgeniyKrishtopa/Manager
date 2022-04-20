@@ -3,11 +3,11 @@ import React from 'react';
 import { Keyboard, KeyboardAvoidingView } from 'react-native';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
-
-import { IAuthData } from 'typings/interfaces';
-import CustomButton from 'components/CustomButton/Index';
+import { useLanguage } from 'utils/Hooks/useLanguage';
+import CustomButtonSubmit from 'components/CustomButton/Index';
 import CustomInput from 'components/CustomInput/Index';
-import { Fields } from 'typings/enums';
+import { IAuthData } from 'typings/interfaces';
+import { Fields, TranslationInfo } from 'typings/enums';
 
 type LoginForm = {
   onSignInSubmitData?: (values: IAuthData) => void;
@@ -15,6 +15,8 @@ type LoginForm = {
 };
 
 export default function FormLogin({ onSignInSubmitData, onSignUpSubmitData }: LoginForm) {
+  const i18n = useLanguage();
+
   const formSubmit = (values: IAuthData) => {
     Keyboard.dismiss();
 
@@ -59,6 +61,7 @@ export default function FormLogin({ onSignInSubmitData, onSignUpSubmitData }: Lo
               fieldName={Fields.email}
               value={values.email}
               error={errors.email}
+              placeholder={i18n.t(TranslationInfo.Email)}
               touched={touched.email}
               handleChange={handleChange}
               handleBlur={handleBlur}
@@ -68,12 +71,13 @@ export default function FormLogin({ onSignInSubmitData, onSignUpSubmitData }: Lo
               fieldName={Fields.password}
               value={values.password}
               error={errors.password}
+              placeholder={i18n.t(TranslationInfo.Password)}
               touched={touched.password}
               handleChange={handleChange}
               handleBlur={handleBlur}
               secureTextEntry={true}
             />
-            <CustomButton handleSubmit={handleSubmit} isDisabled={!(isValid && dirty)} />
+            <CustomButtonSubmit handleSubmit={handleSubmit} isDisabled={!(isValid && dirty)} />
           </KeyboardAvoidingView>
         )}
       </Formik>

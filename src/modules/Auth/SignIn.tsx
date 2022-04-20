@@ -10,8 +10,9 @@ import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
 import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { IAuthData } from 'typings/interfaces';
-import { Screens, AuthInfo } from 'typings/enums';
+import { Screens, TranslationInfo } from 'typings/enums';
 
 export const StyledTextInfo = styled.Text`
   font-size: 18px;
@@ -48,6 +49,7 @@ function SignIn() {
   const [navigation] = useNavigationHook(Screens.SignIn);
   const { orientation } = useGetOrientation();
   const [dispatch] = useDispatchHook();
+  const i18n = useLanguage();
   const theme = useTheme();
 
   const onPressNavigationHandler = () => {
@@ -62,12 +64,12 @@ function SignIn() {
     <TouchableDismissWrappper>
       <StyledScreenWrapper orientation={orientation}>
         <StyledInfoWrapper orientation={orientation}>
-          <StyledTextInfo>{AuthInfo.VisitFirst}</StyledTextInfo>
+          <StyledTextInfo>{i18n.t(TranslationInfo.VisitFirst)}</StyledTextInfo>
           <StyledSignUpIconHolder onPress={onPressNavigationHandler} orientation={orientation}>
             <FontAwesome name="sign-in" size={40} color={theme.colors.primary} />
           </StyledSignUpIconHolder>
         </StyledInfoWrapper>
-        <StyledTitle>{AuthInfo.SignIn}</StyledTitle>
+        <StyledTitle>{i18n.t(TranslationInfo.SignIn)}</StyledTitle>
         <FormLogin onSignInSubmitData={onSignInSubmitData} />
       </StyledScreenWrapper>
     </TouchableDismissWrappper>
