@@ -4,12 +4,14 @@ import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import uuid from 'react-native-uuid';
 import InputScrollView from 'react-native-input-scroll-view';
-import CustomButton from 'components/CustomButton/Index';
-import { phoneValidate } from 'utils/helpers';
-import { IPropsForms, ILocation, ICreateContactData } from 'typings/interfaces';
+import CustomButtonSubmit from 'components/CustomButton/Index';
 import ButtonStepper from './ButtonStepper';
 import FieldsList from './FieldsList';
-import { FieldsContact } from 'typings/enums';
+import { useLanguage } from 'utils/Hooks/useLanguage';
+import { phoneValidate } from 'utils/helpers';
+import { IPropsForms, ILocation, ICreateContactData } from 'typings/interfaces';
+import { FieldsContact, TranslationInfo } from 'typings/enums';
+import { Moment } from 'moment';
 
 export interface IValuesData {
   [FieldsContact.firstName]: string;
@@ -35,13 +37,15 @@ export default function FormContact({
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isValidPhone, setIsValidPhone] = useState(false);
   const [isPhoneBlurredWithoutValue, setIsPhoneBlurredWithoutValue] = useState(false);
-  const [birthDay, setBirthDay] = useState<string>('');
+  const [birthDay, setBirthDay] = useState<string | Moment>('');
+  const [birthDayFormatted, setBirthDayFormatted] = useState<string>('');
   const [isDateBlurredWithoutValue, setIsDateBlurredWithoutValue] = useState(false);
   const [avatarLink, setAvatarLink] = useState<string>('');
   const [location, setLocation] = useState<null | ILocation>(null);
   const [step, setStep] = useState<number>(0);
 
   const [isValuesChanged, setIsValuesChanged] = useState<boolean>(false);
+  const i18n = useLanguage();
 
   const STEPS = 4;
 
@@ -116,28 +120,28 @@ export default function FormContact({
   };
 
   const onBlurDateHandler = () => {
-    if (!birthDay.length) {
+    if (!birthDayFormatted.length) {
       setIsDateBlurredWithoutValue(true);
     } else {
       setIsDateBlurredWithoutValue(false);
     }
   };
 
-  const dateNumberHandler = (value: string) => {
+  const dateNumberHandler = (value: string | Moment) => {
     setBirthDay(value);
   };
 
   const CreateContactSchema = Yup.object().shape({
-    [FieldsContact.firstName]: Yup.string().required(FieldsContact.required),
-    [FieldsContact.lastName]: Yup.string().required(FieldsContact.required),
+    [FieldsContact.firstName]: Yup.string().required(i18n.t(TranslationInfo.Required)),
+    [FieldsContact.lastName]: Yup.string().required(i18n.t(TranslationInfo.Required)),
     [FieldsContact.email]: Yup.string()
-      .email(FieldsContact.invalidEmail)
-      .required(FieldsContact.required),
+      .email(i18n.t(TranslationInfo.InvalidEmail))
+      .required(i18n.t(TranslationInfo.Required)),
     [FieldsContact.website]: Yup.string()
       .trim()
       .matches(
         /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-        FieldsContact.invalidSite,
+        i18n.t(TranslationInfo.InvalidSite),
       ),
   });
 
@@ -215,14 +219,15 @@ export default function FormContact({
             dateNumberHandler={dateNumberHandler}
             onBlurDateHandler={onBlurDateHandler}
             isDateBlurredWithoutValue={isDateBlurredWithoutValue}
-            birthDay={birthDay}
+            birthDayFormatted={birthDayFormatted}
+            setBirthDayFormatted={setBirthDayFormatted}
             avatarLink={avatarLink}
             setAvatarLink={setAvatarLink}
             location={location}
             setLocation={setLocation}
           />
           {step === STEPS - 1 && (
-            <CustomButton
+            <CustomButtonSubmit
               handleSubmit={handleSubmit}
               isDisabled={!(isValid && dirty && isValidPhone && birthDay) && !isValuesChanged}
             />

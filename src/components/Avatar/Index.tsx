@@ -2,11 +2,12 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { AvatarUpload } from 'typings/enums';
 import { useTheme } from 'styled-components';
 import styled from 'styled-components/native';
 import ImageFullViewer from 'components/ImageFullViewer/Index';
 import Loader from 'components/Loader/Index';
+import { useLanguage } from 'utils/Hooks/useLanguage';
+import { TranslationInfo } from 'typings/enums';
 interface IProps {
   setValue: Dispatch<SetStateAction<string>>;
   value: string;
@@ -64,6 +65,7 @@ export default function Avatar({ setValue, value }: IProps) {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
 
   const theme = useTheme();
+  const i18n = useLanguage();
 
   const onOpenFullImage = () => {
     setIsFullImageOpen(true);
@@ -121,10 +123,10 @@ export default function Avatar({ setValue, value }: IProps) {
         <Ionicons name="person-circle-outline" size={145} color={theme.colors.primary} />
       )}
       <StyledSaveButton onPress={openImagePickerAsync} isImage={value.length > 0}>
-        <StyledText>{AvatarUpload.Select}</StyledText>
+        <StyledText>{i18n.t(TranslationInfo.SelectImages)}</StyledText>
       </StyledSaveButton>
       <StyledSaveButton onPress={openCameraAsync} isImage={value.length > 0}>
-        <StyledText>{AvatarUpload.OpenCamera}</StyledText>
+        <StyledText>{i18n.t(TranslationInfo.OpenCamera)}</StyledText>
       </StyledSaveButton>
       <ImageFullViewer urlValue={value} openFullViewImage={isFullImageOpen} />
     </StyledWrapper>

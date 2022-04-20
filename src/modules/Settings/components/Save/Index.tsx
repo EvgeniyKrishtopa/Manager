@@ -12,6 +12,7 @@ const StyledSaveButton = styled.TouchableOpacity`
 export default function SaveButton({
   isNameChanged,
   isAvatarChanged,
+  isLanguageChanged,
   saveDataHandler,
 }: IUserUpdationData) {
   const theme = useTheme();
@@ -23,7 +24,7 @@ export default function SaveButton({
 
   return (
     <>
-      {isNameChanged || isAvatarChanged ? (
+      {isNameChanged || isAvatarChanged || isLanguageChanged ? (
         <StyledSaveButton onPress={onPressHandler}>
           <Feather name="save" size={28} color={theme.colors.primary} />
         </StyledSaveButton>

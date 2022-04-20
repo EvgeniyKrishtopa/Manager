@@ -1,7 +1,8 @@
 import React from 'react';
 
 import styled from 'styled-components/native';
-import { AlertsInfo } from 'typings/enums';
+import { useLanguage } from 'utils/Hooks/useLanguage';
+import { TranslationInfo } from 'typings/enums';
 
 const StyledWrapperError = styled.View`
   width: 90%;
@@ -34,10 +35,12 @@ export interface IPropsMessageNotification {
 }
 
 export default function ErrorNotification() {
+  const i18n = useLanguage();
+
   return (
     <StyledWrapperError>
-      <StyledTextTitleError>{AlertsInfo.Error}</StyledTextTitleError>
-      <StyledTextDescriptionError>Some error occurs.</StyledTextDescriptionError>
+      <StyledTextTitleError>{i18n.t(TranslationInfo.ErrorNotification)}</StyledTextTitleError>
+      <StyledTextDescriptionError>{i18n.t(TranslationInfo.ErrorOccurs)}</StyledTextDescriptionError>
     </StyledWrapperError>
   );
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import { Entypo } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { useTheme } from 'styled-components';
-import { clearAvatarUser, LogOutAction } from 'redux/reducers/usersReducer';
+import { clearAvatarUser, LogOutAction, clearLanguage } from 'redux/reducers/usersReducer';
 import { clearArticles } from 'redux/reducers/articlesUserReducer';
 import { clearContacts } from 'redux/reducers/contactsUserReducer';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
@@ -21,6 +21,7 @@ export default function LogOutButton() {
     dispatch(clearArticles());
     dispatch(clearContacts());
     dispatch(clearAvatarUser());
+    // dispatch(clearLanguage());
   };
 
   return (

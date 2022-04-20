@@ -12,11 +12,12 @@ import { StyledItemsWrapper, OrientationProps } from 'components/Styled/Index';
 import RecentItems from './components/RecentItems/Index';
 import Loader from 'components/Loader/Index';
 import ErrorBoundary from 'utils/ErrorBoundary';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { withBackgroundImage } from 'utils/Hocs/withBackgroundImage';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
 import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
-import { Errors, Screens } from 'typings/enums';
+import { Screens, TranslationInfo } from 'typings/enums';
 import { IArticleManageData, ICreateContactData } from 'typings/interfaces';
 
 const StyledScrollView = styled.ScrollView<OrientationProps>`
@@ -33,9 +34,11 @@ function Home() {
   const { userData, imageURL } = useSelector((state: RootState) => state.users);
   const { articles } = useSelector((state: RootState) => state.articles);
   const { contacts, avatars } = useSelector((state: RootState) => state.contacts);
+
   const [navigation] = useNavigationHook(Screens.Home);
   const [dispatch] = useDispatchHook();
   const { orientation } = useGetOrientation();
+  const i18n = useLanguage();
 
   const { displayName } = userData;
 
@@ -78,7 +81,7 @@ function Home() {
   const isRecentItemExist = (recentContact || recentArticle) && userData;
 
   return (
-    <ErrorBoundary message={Errors.Error}>
+    <ErrorBoundary message={i18n.t(TranslationInfo.Error)}>
       <StyledScrollView orientation={orientation}>
         <StyledItemsWrapper>
           <TopInfo

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/store';
 import { DeleteContactAction, DeleteContactImageAction } from 'redux/reducers/contactsUserReducer';
 import { useTheme } from 'styled-components';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
@@ -12,9 +14,10 @@ import {
   StyledOpenFullCardText,
 } from 'components/Styled/Index';
 import { getFormattedDate } from 'utils/helpers';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { Moment } from 'moment';
 import { IDeleteArticleData } from 'typings/interfaces';
-
+import { TranslationInfo } from 'typings/enums';
 interface IItemWrapperProps {
   children: JSX.Element;
   userId: string;
@@ -35,8 +38,11 @@ export default function ItemWrapper({
   created,
   isFrom,
 }: IItemWrapperProps) {
+  const { language } = useSelector((state: RootState) => state.users);
+
   const theme = useTheme();
   const [dispatch] = useDispatchHook();
+  const i18n = useLanguage();
 
   const deleteContact = () => {
     dispatch(DeleteContactImageAction({ id }));
@@ -54,12 +60,14 @@ export default function ItemWrapper({
   return (
     <StyledCard>
       {children}
-      {created ? <StyledDatePost>{getFormattedDate(created)}</StyledDatePost> : null}
+      {created ? (
+        <StyledDatePost isFrom={isFrom}>{getFormattedDate(created, language)}</StyledDatePost>
+      ) : null}
       <StyledIconDeleteWrapper onPress={deleteItemHandler}>
         <AntDesign name="delete" size={24} color={theme.colors.secondaryBackgroundColor} />
       </StyledIconDeleteWrapper>
       <StyledOpenFullCardWrapper onPress={openFullItemHandler}>
-        <StyledOpenFullCardText>Open</StyledOpenFullCardText>
+        <StyledOpenFullCardText>{i18n.t(TranslationInfo.Open)}</StyledOpenFullCardText>
       </StyledOpenFullCardWrapper>
     </StyledCard>
   );

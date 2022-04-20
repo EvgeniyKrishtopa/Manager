@@ -13,8 +13,9 @@ import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 import ErrorBoundary from 'utils/ErrorBoundary';
 import { useDispatchHook } from 'utils/Hooks/useDispatchHook';
 import { useNavigationHook } from 'utils/Hooks/useNavigationHook';
-import { Errors, Screens } from 'typings/enums';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { IArticleManageData } from 'typings/interfaces';
+import { Screens, TranslationInfo } from 'typings/enums';
 
 const StyledWrapper = styled.View`
   display: flex;
@@ -45,8 +46,10 @@ function EditArticle({ route }: INavProp) {
 
   const { userData } = useSelector((state: RootState) => state.users);
   const { articles, isLoadingArticle } = useSelector((state: RootState) => state.articles);
+
   const [navigation] = useNavigationHook(Screens.EditArticle);
   const [dispatch] = useDispatchHook();
+  const i18n = useLanguage();
 
   const id = userData.uid;
 
@@ -82,7 +85,7 @@ function EditArticle({ route }: INavProp) {
   }
 
   return (
-    <ErrorBoundary message={Errors.Error}>
+    <ErrorBoundary message={i18n.t(TranslationInfo.Error)}>
       <TouchableDismissWrappper>
         <StyledWrapper>
           {!isForSubmitting ? (

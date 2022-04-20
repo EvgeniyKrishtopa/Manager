@@ -3,7 +3,6 @@ import React, { Dispatch, SetStateAction } from 'react';
 import InputScrollView from 'react-native-input-scroll-view';
 import styled from 'styled-components/native';
 import { StyledInput } from 'components/Styled/Index';
-
 interface IProps {
   type: string;
   value: string;

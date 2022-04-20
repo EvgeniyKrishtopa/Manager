@@ -4,11 +4,13 @@ import InputScrollView from 'react-native-input-scroll-view';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import uuid from 'react-native-uuid';
-import CustomButton from 'components/CustomButton/Index';
+import CustomButtonSubmit from 'components/CustomButton/Index';
 import CustomInput from 'components/CustomInput/Index';
 import { useGetOrientation } from 'utils/Hooks/useGetOrientation';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import { uidCleaner } from 'utils/helpers';
 import { IArticleData, IPropsForms } from 'typings/interfaces';
+import { TranslationInfo } from 'typings/enums';
 
 enum Fields {
   title = 'title',
@@ -34,6 +36,7 @@ export default function FormArticle({
   const [infoHeight, setInfoHeight] = useState<number>(100);
 
   const { orientation } = useGetOrientation();
+  const i18n = useLanguage();
 
   const valueId = useRef<string>('');
 
@@ -87,9 +90,9 @@ export default function FormArticle({
   };
 
   const CreateArticleSchema = Yup.object().shape({
-    title: Yup.string().required(Fields.required),
-    description: Yup.string().required(Fields.required),
-    info: Yup.string().required(Fields.required),
+    title: Yup.string().required(i18n.t(TranslationInfo.Required)),
+    description: Yup.string().required(i18n.t(TranslationInfo.Required)),
+    info: Yup.string().required(i18n.t(TranslationInfo.Required)),
   });
 
   return (
@@ -118,6 +121,7 @@ export default function FormArticle({
             value={values.title}
             error={errors.title}
             touched={touched.title}
+            placeholder={i18n.t(TranslationInfo.Title)}
             handleChange={handleChange}
             handleBlur={handleBlur}
             heightInput={titleHeight}
@@ -129,6 +133,7 @@ export default function FormArticle({
             value={values.description}
             error={errors.description}
             touched={touched.description}
+            placeholder={i18n.t(TranslationInfo.Description)}
             handleChange={handleChange}
             handleBlur={handleBlur}
             heightInput={descriptionHeight}
@@ -140,13 +145,14 @@ export default function FormArticle({
             value={values.info}
             error={errors.info}
             touched={touched.info}
+            placeholder={i18n.t(TranslationInfo.Info)}
             handleChange={handleChange}
             handleBlur={handleBlur}
             heightInput={infoHeight}
             multiline={true}
             setDynamicHeight={setInfoHeight}
           />
-          <CustomButton handleSubmit={handleSubmit} isDisabled={!(isValid && dirty)} />
+          <CustomButtonSubmit handleSubmit={handleSubmit} isDisabled={!(isValid && dirty)} />
         </InputScrollView>
       )}
     </Formik>

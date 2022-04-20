@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components/native';
 import { StyledTitle } from 'components/Styled/Index';
 import Loader from 'components/Loader/Index';
-
+import { useLanguage } from 'utils/Hooks/useLanguage';
+import { TranslationInfo } from 'typings/enums';
 interface ITopInfo {
   name: string;
   avatar: string;
@@ -68,12 +69,13 @@ const StyledButtonGoToSettings = styled.TouchableOpacity``;
 
 export default function TopInfo({ name, avatar, onNavigateHandler }: ITopInfo) {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
+  const i18n = useLanguage();
 
   return (
     <StyledWrapper>
       {name?.length ? (
         <>
-          <StyledTitle>{`Welcome, ${name}!`}</StyledTitle>
+          <StyledTitle>{`${i18n.t(TranslationInfo.Welcome)}, ${name}!`}</StyledTitle>
           {avatar?.length ? (
             <StyledAvatarHolder>
               <StyledAvatar
@@ -86,15 +88,13 @@ export default function TopInfo({ name, avatar, onNavigateHandler }: ITopInfo) {
               {isImageLoading && <Loader />}
             </StyledAvatarHolder>
           ) : null}
-          <StyledDescription>
-            Here you can manage your contacts and other personal information.
-          </StyledDescription>
+          <StyledDescription>{i18n.t(TranslationInfo.HomeDescription)}</StyledDescription>
         </>
       ) : (
         <StyledEmptyScreenInfo>
-          Welcome! Add more personal infromation{' '}
+          {i18n.t(TranslationInfo.HomeDescriptionWithItems)}{' '}
           <StyledButtonGoToSettings onPress={onNavigateHandler}>
-            <StyledEmptyScreenLink>here</StyledEmptyScreenLink>
+            <StyledEmptyScreenLink>{i18n.t(TranslationInfo.Here)}</StyledEmptyScreenLink>
           </StyledButtonGoToSettings>
         </StyledEmptyScreenInfo>
       )}

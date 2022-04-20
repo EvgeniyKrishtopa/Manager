@@ -4,6 +4,10 @@ type InputProps = {
   heightInput?: number;
 };
 
+type DateProps = {
+  isFrom?: string;
+};
+
 export type OrientationProps = {
   orientation: string;
 };
@@ -20,7 +24,7 @@ export const StyledScreenWrapper = styled.View<OrientationProps>`
 `;
 
 export const StyledTitle = styled.Text`
-  font-size: 16px;
+  font-size: 18px;
   text-transform: uppercase;
   margin-bottom: 10px;
   padding-top: 10px;
@@ -63,7 +67,7 @@ export const StyledButtonPrimaryDisabled = styled(StyledButtonPrimary)`
 
 export const StyledButtonTextPrimary = styled.Text`
   color: ${(props) => props.theme.colors.secondaryTextColor};
-  font-size: 16px;
+  font-size: 14px;
   font-family: ${(props) => props.theme.fonts.secondaryBold};
   font-weight: bold;
   text-transform: uppercase;
@@ -86,10 +90,11 @@ export const StyledIconDeleteWrapper = styled.TouchableOpacity`
   right: 15px;
 `;
 
-export const StyledDatePost = styled.Text`
+export const StyledDatePost = styled.Text<DateProps>`
   font-size: 14px;
   margin-bottom: 15px;
-  padding-left: 15px;
+  padding-left: ${(props) => (props.isFrom === 'article' ? '15px' : '5px')};
+  text-transform: capitalize;
   font-family: ${(props) => props.theme.fonts.secondaryBold};
   color: ${(props) => props.theme.colors.mainTextColor};
 `;

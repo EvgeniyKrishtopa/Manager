@@ -1,9 +1,10 @@
 import React, { ComponentType, useCallback, useEffect, useState } from 'react';
-import { AlertsInfo, ManageActivities, UserActivities } from 'typings/enums';
 
 import { RootState } from 'redux/store';
 import { useSelector } from 'react-redux';
 import { useToast } from 'react-native-toast-notifications';
+import { useLanguage } from 'utils/Hooks/useLanguage';
+import { ManageActivities, UserActivities, TranslationInfo } from 'typings/enums';
 
 export const withNotification = (WrappedComponent: ComponentType) => (moreProps: any) => {
   const [userAction, setUserAction] = useState<string>('');
@@ -15,6 +16,7 @@ export const withNotification = (WrappedComponent: ComponentType) => (moreProps:
   const { typeContactAction, errorContact } = useSelector((state: RootState) => state.contacts);
 
   const toast = useToast();
+  const i18n = useLanguage();
 
   const toastRender = useCallback(
     (textNotification: string | undefined) => {
@@ -42,34 +44,40 @@ export const withNotification = (WrappedComponent: ComponentType) => (moreProps:
 
   useEffect(() => {
     if (userAction) {
-      userAction === UserActivities.Update && toastRender(AlertsInfo.SettingsAction);
+      userAction === UserActivities.Update && toastRender(i18n.t(TranslationInfo.SettingsAction));
       setUserAction('');
     } else if (error.length) {
-      toastRender(AlertsInfo.Error);
+      toastRender(i18n.t(TranslationInfo.Error));
     }
-  }, [error, userAction, toastRender]);
+  }, [error, userAction, toastRender, i18n]);
 
   useEffect(() => {
     if (articleAction) {
-      articleAction === ManageActivities.Add && toastRender(AlertsInfo.AddNewArticleAction);
-      articleAction === ManageActivities.Edit && toastRender(AlertsInfo.EditArticleAction);
-      articleAction === ManageActivities.Delete && toastRender(AlertsInfo.RemoveArticleAction);
+      articleAction === ManageActivities.Add &&
+        toastRender(i18n.t(TranslationInfo.AddNewArticleAction));
+      articleAction === ManageActivities.Edit &&
+        toastRender(i18n.t(TranslationInfo.EditArticleAction));
+      articleAction === ManageActivities.Delete &&
+        toastRender(i18n.t(TranslationInfo.RemoveArticleAction));
       setArticleAction('');
     } else if (errorArticle?.length) {
-      toastRender(AlertsInfo.Error);
+      toastRender(i18n.t(TranslationInfo.Error));
     }
-  }, [errorArticle, toastRender, articleAction]);
+  }, [errorArticle, toastRender, articleAction, i18n]);
 
   useEffect(() => {
     if (contactAction) {
-      contactAction === ManageActivities.Add && toastRender(AlertsInfo.AddNewContactAction);
-      contactAction === ManageActivities.Edit && toastRender(AlertsInfo.EditContactAction);
-      contactAction === ManageActivities.Delete && toastRender(AlertsInfo.RemoveContactAction);
+      contactAction === ManageActivities.Add &&
+        toastRender(i18n.t(TranslationInfo.AddNewContactAction));
+      contactAction === ManageActivities.Edit &&
+        toastRender(i18n.t(TranslationInfo.EditContactAction));
+      contactAction === ManageActivities.Delete &&
+        toastRender(i18n.t(TranslationInfo.RemoveContactAction));
       setContactAction('');
     } else if (errorContact?.length) {
-      toastRender(AlertsInfo.Error);
+      toastRender(i18n.t(TranslationInfo.Error));
     }
-  }, [errorContact, toastRender, contactAction]);
+  }, [errorContact, toastRender, contactAction, i18n]);
 
   return <WrappedComponent {...moreProps} />;
 };

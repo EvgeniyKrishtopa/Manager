@@ -9,9 +9,10 @@ import { TabView, SceneMap, Route } from 'react-native-tab-view';
 import Creator from './components/Creator/Index';
 import { StyledTitle } from 'components/Styled/Index';
 import ErrorBoundary from 'utils/ErrorBoundary';
+import { useLanguage } from 'utils/Hooks/useLanguage';
 import TouchableDismissWrappper from 'utils/TouchableDismissWrappper';
 import { getDimensions } from 'utils/helpers';
-import { AddScreenTexts, Errors } from 'typings/enums';
+import { AddScreenTexts, TranslationInfo } from 'typings/enums';
 
 interface ITabBar {
   width: number;
@@ -50,17 +51,18 @@ interface IProps {
 function Add() {
   const [index, setIndex] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const i18n = useLanguage();
+  const theme = useTheme();
+
   const [routes, setRoutes] = useState<Array<IRoutes>>([
-    { key: AddScreenTexts.First, title: AddScreenTexts.TitleTabFirst },
-    { key: AddScreenTexts.Second, title: AddScreenTexts.TitleTabSecond },
+    { key: AddScreenTexts.First, title: i18n.t(TranslationInfo.Article) },
+    { key: AddScreenTexts.Second, title: i18n.t(TranslationInfo.Contact) },
   ]);
   const { userData } = useSelector((state: RootState) => state.users);
 
   const { windowWidth } = getDimensions();
 
   const id = userData.uid;
-
-  const theme = useTheme();
 
   const FirstRoute = () => <Creator id={id} type="article" />;
   const SecondRoute = () => <Creator id={id} type="contact" />;
@@ -107,10 +109,10 @@ function Add() {
   };
 
   return (
-    <ErrorBoundary message={Errors.Error}>
+    <ErrorBoundary message={i18n.t(TranslationInfo.Error)}>
       <TouchableDismissWrappper>
         <Wrapper>
-          <StyledTitle>Add a New:</StyledTitle>
+          <StyledTitle>{i18n.t(TranslationInfo.AddNew)}</StyledTitle>
           <TabView
             navigationState={{ index, routes }}
             renderScene={renderScene}
